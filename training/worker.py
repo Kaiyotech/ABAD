@@ -11,7 +11,7 @@ from rlgym.envs import Match
 from rlgym.utils.gamestates import PlayerData, GameState
 from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition
 from rlgym.utils.reward_functions.default_reward import DefaultReward
-from rocket_learn.utils.mybots_statesets import WallDribble, GroundAirDribble
+from utils.mybots_statesets import WallDribble, GroundAirDribble
 from rocket_learn.utils.util import ExpandAdvancedObs
 from rlgym.utils.obs_builders.advanced_obs import AdvancedObs
 from rlgym_tools.extra_action_parsers.kbm_act import KBMAction

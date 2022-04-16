@@ -84,11 +84,11 @@ if __name__ == "__main__":
     )
 
     actor = DiscretePolicy(Sequential(
-        Linear(state_dim, 256),
+        Linear(state_dim, 512),
         ReLU(),
-        Linear(256, 256),
+        Linear(512, 512),
         ReLU(),
-        Linear(256, total_output),
+        Linear(512, total_output),
         SplitLayer(splits=split)
     ), split)
 
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         device="cuda",
     )
 
-    alg.load("checkpoint_save_directory/ABAD_1649989274.9392242/ABAD_540/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/ABAD_1649989274.9392242/ABAD_540/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
