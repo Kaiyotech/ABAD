@@ -84,7 +84,7 @@ class AerialRewardPerTouch(RewardFunction):
         if state.last_touch == player.car_id and state.ball.position[2] > 300:
             self.num_touches += 1
             reward = self.exp_base ** self.num_touches
-            return min(reward, self.max_touches_reward)
+            return min(reward, self.max_touches_reward) / self.max_touches_reward  # normalize to 1
 
         elif state.ball.position[2] <= 300:
             self.num_touches = 0
@@ -113,7 +113,7 @@ class IncreaseRewardPerTouch(RewardFunction):
         if state.last_touch == player.car_id:
             self.num_touches += 1
             reward = self.exp_base ** self.num_touches
-            return min(reward, self.max_touches_reward)
+            return min(reward, self.max_touches_reward) / self.max_touches_reward  # normalize
 
         else:
             self.num_touches = 0

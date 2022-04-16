@@ -1,9 +1,9 @@
-from rocket_learn.utils.mybots_rewards import *
+from utils.mybots_rewards import *
 from rlgym_tools.extra_rewards.anneal_rewards import AnnealRewards
 
 
 def anneal_rewards_fn():
-    max_steps = 2_000_000  # 20_000_000  # TODO tune this some
+    max_steps = 1  # 20_000_000
     # when annealing, change the weights between 1 and 2, 2 is new
     reward1 = MyRewardFunction(
         team_spirit=0.2,
@@ -26,21 +26,21 @@ def anneal_rewards_fn():
 
     reward2 = MyRewardFunction(
         team_spirit=0,
-        goal_w=20,
-        aerial_goal_w=80,
-        double_tap_goal_w=250,
-        shot_w=7,
-        save_w=10,
+        goal_w=1.3,
+        aerial_goal_w=5,
+        double_tap_goal_w=15,
+        shot_w=0.4,
+        save_w=0.6,
         demo_w=0,
         above_w=0,
         got_demoed_w=0,
-        behind_ball_w=0.5,
-        save_boost_w=0.015,
-        concede_w=-30,
-        velocity_w=0.05,
-        velocity_pb_w=0.4,
-        velocity_bg_w=1.25,
-        ball_touch_w=8,
+        behind_ball_w=0.03,
+        save_boost_w=0.001,
+        concede_w=-2,
+        velocity_w=0.003,
+        velocity_pb_w=0.025,
+        velocity_bg_w=0.075,
+        ball_touch_w=15,
     )
 
     alternating_rewards_steps = [reward1, max_steps, reward2]
@@ -125,21 +125,21 @@ class MyRewardFunction(CombinedReward):
     def __init__(
             self,
             team_spirit=0.2,
-            goal_w=10,
-            aerial_goal_w=25,
-            double_tap_goal_w=75,
+            goal_w=10.0,
+            aerial_goal_w=25.0,
+            double_tap_goal_w=75.0,
             shot_w=0.2,
-            save_w=5,
-            demo_w=5,
+            save_w=5.0,
+            demo_w=5.0,
             above_w=0.05,
-            got_demoed_w=-6,
+            got_demoed_w=-6.0,
             behind_ball_w=0.01,
             save_boost_w=0.03,
-            concede_w=-5,
+            concede_w=-5.0,
             velocity_w=0.8,
             velocity_pb_w=0.5,
             velocity_bg_w=0.6,
-            ball_touch_w=1,
+            ball_touch_w=1.0,
     ):
         self.team_spirit = team_spirit
         self.goal_w = goal_w

@@ -15,7 +15,7 @@ from rlgym_tools.extra_action_parsers.kbm_act import KBMAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
 from agent import DiscretePolicy
-from rocket_learn.ppo import PPO
+from my_ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import ExpandAdvancedObs, SplitLayer
 
