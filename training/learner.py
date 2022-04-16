@@ -14,12 +14,10 @@ from rewards import anneal_rewards_fn, MyRewardFunction
 from rlgym_tools.extra_action_parsers.kbm_act import KBMAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
-from rocket_learn.agent.discrete_policy import DiscretePolicy
+from agent import DiscretePolicy
 from rocket_learn.ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import ExpandAdvancedObs, SplitLayer
-
-# TODO kaiming init
 
 from Constants import *
 

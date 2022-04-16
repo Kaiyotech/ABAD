@@ -16,7 +16,13 @@ class DiscretePolicy(Policy):
         super().__init__(deterministic)
         self.net = net
         self.shape = shape
-        self.
+        self._reset_parameters()
+
+    def _reset_parameters(self):
+        r"""Initiate parameters in the transformer model. Taken from PyTorch Transformer impl"""
+        for p in self.parameters():
+            if p.dim() > 1:
+                kaiming_uniform_(p)
 
     def forward(self, obs):
         logits = self.net(obs)
