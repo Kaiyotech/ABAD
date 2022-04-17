@@ -22,6 +22,7 @@ from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutW
 
 from training.Constants import *
 from training.rewards import anneal_rewards_fn, MyRewardFunction
+from utils.mybots_terminals import *
 from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 
 
@@ -66,8 +67,8 @@ if __name__ == "__main__":
                     ),
         obs_builder=ExpandAdvancedObs(),
         action_parser=KBMAction(),
-        terminal_conditions=[TimeoutCondition(round(10 // T_STEP)),
-                             GoalScoredCondition()],
+        terminal_conditions=[TimeoutCondition(round(20 // T_STEP)),
+                             GoalScoredCondition(), BallTouchGroundCondition()],
         reward_function=anneal_rewards_fn()
     )
 
