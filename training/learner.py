@@ -10,16 +10,16 @@ from redis import Redis
 
 from rlgym.utils.obs_builders.advanced_obs import AdvancedObs
 from rlgym.utils.gamestates import PlayerData, GameState
-from rewards import anneal_rewards_fn, MyRewardFunction
+from training.rewards import anneal_rewards_fn, MyRewardFunction
 from rlgym_tools.extra_action_parsers.kbm_act import KBMAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
-from agent import DiscretePolicy
-from my_ppo import PPO
+from training.agent import DiscretePolicy
+from training.my_ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import ExpandAdvancedObs, SplitLayer
 
-from Constants import *
+from training.Constants import *
 
 
 # ROCKET-LEARN ALWAYS EXPECTS A BATCH DIMENSION IN THE BUILT OBSERVATION

@@ -1,6 +1,7 @@
 REM verify redis is running already (user1@MSI:/$ sudo redis-server /etc/redis/redis.conf)
-call ..\..\venv\Scripts\activate.bat
-start python learner.py
+call ..\venv\Scripts\activate.bat
+cd ..
+start python -m training.learner
 TIMEOUT 10
 REM start python worker.py STREAMER
 :loop

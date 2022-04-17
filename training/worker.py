@@ -20,8 +20,8 @@ from rlgym.utils.action_parsers.discrete_act import DiscreteAction
 
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 
-from Constants import *
-from rewards import anneal_rewards_fn, MyRewardFunction
+from training.Constants import *
+from training.rewards import anneal_rewards_fn, MyRewardFunction
 from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 
 

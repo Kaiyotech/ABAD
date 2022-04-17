@@ -253,12 +253,9 @@ class PPO:
 
             # TODO remove this testing
             # normalize before update
-            max_reward = np.amax(rewards)
-            print(f"max reward before norm was {max_reward}")
+            print(f"before - max, min, mean, std was {np.max(rewards)}, {np.min(rewards)}, {np.mean(rewards)}, {np.std(rewards)}")
             rewards = self.update_reward_norm(rewards)
-            max_reward = np.amax(rewards)
-            print(f"max reward after norm was {max_reward}")
-
+            print(f"after - max, min, mean, std was {np.max(rewards)}, {np.min(rewards)}, {np.mean(rewards)}, {np.std(rewards)}")
 
             advantages = self._calculate_advantages_numba(rewards, values, self.gamma, self.gae_lambda)
 
