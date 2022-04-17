@@ -68,7 +68,7 @@ if __name__ == "__main__":
         obs_builder=ExpandAdvancedObs(),
         action_parser=KBMAction(),
         terminal_conditions=[TimeoutCondition(round(20 // T_STEP)),
-                             GoalScoredCondition(), BallTouchGroundCondition()],
+                             GoalScoredCondition(), BallTouchGroundCondition(round(3 // T_STEP))],
         reward_function=anneal_rewards_fn()
     )
 
