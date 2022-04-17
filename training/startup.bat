@@ -5,11 +5,11 @@ start python -m training.learner
 TIMEOUT 10
 REM start python worker.py STREAMER
 :loop
-FOR /L %%G IN (1,1,6) DO (start python worker.py & TIMEOUT 60)
-TIMEOUT 30
+FOR /L %%G IN (1,1,6) DO (start python -m training.worker & TIMEOUT 60)
+TIMEOUT 180
 nircmd win min process "RocketLeague.exe"
-TIMEOUT 10800
-FOR /F "usebackq tokens=2" %%i IN (`tasklist /v ^| findstr /c:"RLearnWorkerABAD"`) DO taskkill /pid %%i
-FOR /F "usebackq tokens=2" %%j IN (`tasklist ^| findstr /c:"RocketLeague.exe"`) DO taskkill /pid %%j
-TIMEOUT 60
-GOTO loop
+REM TIMEOUT 10800
+REM FOR /F "usebackq tokens=2" %%i IN (`tasklist /v ^| findstr /c:"RLearnWorkerABAD"`) DO taskkill /pid %%i
+REM FOR /F "usebackq tokens=2" %%j IN (`tasklist ^| findstr /c:"RocketLeague.exe"`) DO taskkill /pid %%j
+REM TIMEOUT 60
+REM GOTO loop

@@ -44,9 +44,9 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=10
     )
-    run_id = "3825dsff"
+    run_id = "Run1"
     wandb.login(key=os.environ["WANDB_KEY"])
-    logger = wandb.init(dir="wandb_store", name="ABADv1", project="ABAD", entity="kaiyotech", id=run_id, config=config)
+    logger = wandb.init(dir="wandb_store", name="ABADv2", project="ABAD", entity="kaiyotech", id=run_id, config=config)
 
     redis = Redis(username="user1", password=os.environ["redis_user1_key"])
 
