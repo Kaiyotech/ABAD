@@ -251,11 +251,8 @@ class PPO:
             episode_starts = np.roll(dones, 1)
             episode_starts[0] = 1.
 
-            # TODO remove this testing
             # normalize before update
-            print(f"before - max, min, mean, std was {np.max(rewards)}, {np.min(rewards)}, {np.mean(rewards)}, {np.std(rewards)}")
             rewards = self.update_reward_norm(rewards)
-            print(f"after - max, min, mean, std was {np.max(rewards)}, {np.min(rewards)}, {np.mean(rewards)}, {np.std(rewards)}")
 
             advantages = self._calculate_advantages_numba(rewards, values, self.gamma, self.gae_lambda)
 
