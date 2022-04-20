@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     r = Redis(host="127.0.0.1", username="user1", password=os.environ["redis_user1_key"])
     RedisRolloutWorker(r,
-                       "ABADv1",
+                       "Kaiyotech",
                        match,
                        past_version_prob=0.2,
                        streamer_mode=streamer_mode,

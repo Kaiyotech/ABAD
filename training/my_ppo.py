@@ -55,6 +55,7 @@ class PPO:
             max_grad_norm=0.5,
             logger=None,
             device="cuda",
+            reward_clip=10,
     ):
         self.rollout_generator = rollout_generator
 
@@ -81,8 +82,11 @@ class PPO:
         self.max_grad_norm = max_grad_norm
 
         self.running_rew_mean = 0
+        self.running_rew_std = 1
         self.running_rew_var = 1
         self.running_rew_count = 1e-4
+        self.ema_reward_discount = 0.9
+        self.reward_clip = reward_clip
 
         self.total_steps = 0
         self.logger = logger
@@ -91,6 +95,7 @@ class PPO:
         self.jit_tracer = None
 
     def update_reward_norm(self, rewards: np.ndarray) -> np.ndarray:
+        assert "Not Implemented update_reward_norm"  # TODO needs to be fixed
         batch_mean = np.mean(rewards)
         batch_var = np.var(rewards)
         batch_count = rewards.shape[0]
@@ -112,6 +117,19 @@ class PPO:
         self.running_rew_count = new_count
 
         return (rewards - self.running_rew_mean) / np.sqrt(self.running_rew_var + 1e-8)  # TODO normalize before update?
+
+    def _update_ema_reward_norm(self, ep_rewards: np.ndarray) -> None:
+
+        self.running_rew_mean = self.running_rew_mean * self.ema_reward_discount + ep_rewards.mean() * \
+                                (1 - self.ema_reward_discount)
+        diff = ep_rewards.mean() - self.running_rew_mean
+        incr = (1 - self.ema_reward_discount) * diff
+        self.running_rew_var = self.ema_reward_discount * (self.running_rew_var + diff * incr)
+        self.running_rew_std = np.sqrt(self.running_rew_var)
+        return
+
+    def _normalize_reward(self, rewards: np.ndarray) -> np.ndarray:
+        return np.clip(rewards / (self.running_rew_std + 1e-32), -self.reward_clip, self.reward_clip)
 
     def run(self, iterations_per_save=10, save_dir=None, save_jit=False):
         """
@@ -224,6 +242,10 @@ class PPO:
         rewards_tensors = []
 
         ep_rewards = []
+        ep_std_rewards = []
+        rewards_before = []
+        rewards_after = []
+        ep_raw_rewards = []
         ep_steps = []
         n = 0
 
@@ -251,8 +273,13 @@ class PPO:
             episode_starts = np.roll(dones, 1)
             episode_starts[0] = 1.
 
+            # TODO testing
+            # rewards_before.append(rewards.sum())
             # normalize before update
-            rewards = self.update_reward_norm(rewards)
+            ep_raw_rewards.append(rewards.sum())
+            rewards = self._normalize_reward(rewards)
+            # TODO testing
+            # rewards_after.append(rewards.sum())
 
             advantages = self._calculate_advantages_numba(rewards, values, self.gamma, self.gae_lambda)
 
@@ -267,10 +294,20 @@ class PPO:
             ep_rewards.append(rewards.sum())
             ep_steps.append(size)
             n += 1
+
         ep_rewards = np.array(ep_rewards)
+        self._update_ema_reward_norm(ep_rewards)
         ep_steps = np.array(ep_steps)
 
+        # TODO testing
+        rewards_before = np.array(rewards_before)
+        rewards_after = np.array(rewards_after)
+        print(f"{rewards_before.std()} - {rewards_after.std()}")
+        print(f"{self.running_rew_mean} - {self.running_rew_std}")
+
         self.logger.log({
+            "ep_raw_reward_mean": ep_raw_rewards.mean(),
+            "ep_raw_reward_std": ep_raw_rewards.std(),
             "ep_reward_mean": ep_rewards.mean(),
             "ep_reward_std": ep_rewards.std(),
             "ep_len_mean": ep_steps.mean(),
@@ -334,7 +371,8 @@ class PPO:
                 values_pred = self.agent.critic(obs)
                 values_pred = th.squeeze(values_pred)
                 adv = ret - values_pred
-                adv = (adv - th.mean(adv)) / (th.std(adv) + 1e-8)
+                # adv = (adv - th.mean(adv)) / (th.std(adv) + 1e-8)
+                adv = adv / (th.std(adv) + 1e-8)  # updated to remove the mean subtraction
 
                 # clipped surrogate loss
                 policy_loss_1 = adv * ratio
@@ -400,8 +438,10 @@ class PPO:
         # self.agent.shared.load_state_dict(checkpoint['shared_state_dict'])
         self.agent.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.running_rew_mean = checkpoint['reward_norm_mean']
+        # self.running_rew_std = checkpoint['reward_norm_std']
         self.running_rew_var = checkpoint['reward_norm_var']
         self.running_rew_count = checkpoint['reward_norm_count']
+        self.ema_reward_discount = checkpoint['ema_reward_discount']
 
         if continue_iterations:
             self.starting_iteration = checkpoint['epoch']
@@ -428,8 +468,10 @@ class PPO:
             # 'shared_state_dict': self.agent.shared.state_dict(),
             'optimizer_state_dict': self.agent.optimizer.state_dict(),
             'reward_norm_mean': self.running_rew_mean,
-            'reward_norm_var': self.running_rew_var,
+            # 'reward_norm_std': self.running_rew_std,
+            'rward_norm_var': self.running_rew_var,
             'reward_norm_count': self.running_rew_count,
+            'ema_reward_didscount': self.ema_reward_discount,
         }, version_dir + "\\checkpoint.pt")
         if save_actor_jit:
             torch.save(th.jit.trace(self.agent.actor, self.jit_tracer),  version_dir + "\\policy.jit")

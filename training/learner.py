@@ -35,7 +35,7 @@ if __name__ == "__main__":
         gae_lambda=0.95,
         learning_rate_critic=1e-4,
         learning_rate_actor=1e-4,
-        ent_coef=0.01,
+        ent_coef=0.005,
         vf_coef=1.,
         target_steps=1_000_000,
         batch_size=200_000,
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     )
     run_id = "Run1"
     wandb.login(key=os.environ["WANDB_KEY"])
-    logger = wandb.init(dir="wandb_store", name="ABADv2", project="ABAD", entity="kaiyotech", id=run_id, config=config)
+    logger = wandb.init(dir="wandb_store", name="ABADv4", project="ABAD", entity="kaiyotech", id=run_id, config=config)
 
     redis = Redis(username="user1", password=os.environ["redis_user1_key"])
 
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         device="cuda",
     )
 
-    # alg.load("checkpoint_save_directory/ABAD_1649989274.9392242/ABAD_540/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/ABAD_1650173239.4712064/ABAD_210/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
