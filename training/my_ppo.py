@@ -444,9 +444,9 @@ class PPO:
         self.agent.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.running_rew_mean = checkpoint['reward_norm_mean']
         # self.running_rew_std = checkpoint['reward_norm_std']
-        self.running_rew_var = checkpoint['reward_norm_var']
+        self.running_rew_var = checkpoint['rward_norm_var']
         self.running_rew_count = checkpoint['reward_norm_count']
-        self.ema_reward_discount = checkpoint['ema_reward_discount']
+        self.ema_reward_discount = checkpoint['ema_reward_didscount']
 
         if continue_iterations:
             self.starting_iteration = checkpoint['epoch']
@@ -474,9 +474,9 @@ class PPO:
             'optimizer_state_dict': self.agent.optimizer.state_dict(),
             'reward_norm_mean': self.running_rew_mean,
             # 'reward_norm_std': self.running_rew_std,
-            'rward_norm_var': self.running_rew_var,
+            'rward_norm_var': self.running_rew_var,  # TODO fix this on a new run, typo in reward
             'reward_norm_count': self.running_rew_count,
-            'ema_reward_didscount': self.ema_reward_discount,
+            'ema_reward_didscount': self.ema_reward_discount,  # TODO fix this too
         }, version_dir + "\\checkpoint.pt")
         if save_actor_jit:
             torch.save(th.jit.trace(self.agent.actor, self.jit_tracer),  version_dir + "\\policy.jit")
