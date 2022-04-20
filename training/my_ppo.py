@@ -273,12 +273,12 @@ class PPO:
             episode_starts = np.roll(dones, 1)
             episode_starts[0] = 1.
 
-            # TODO testing
+            # T ODO testing
             # rewards_before.append(rewards.sum())
             # normalize before update
             ep_raw_rewards.append(rewards.sum())
             rewards = self._normalize_reward(rewards)
-            # TODO testing
+            # T ODO testing
             # rewards_after.append(rewards.sum())
 
             advantages = self._calculate_advantages_numba(rewards, values, self.gamma, self.gae_lambda)
@@ -298,16 +298,21 @@ class PPO:
         ep_rewards = np.array(ep_rewards)
         self._update_ema_reward_norm(ep_rewards)
         ep_steps = np.array(ep_steps)
+        ep_raw_rewards = np.array(ep_raw_rewards)
 
         # TODO testing
         rewards_before = np.array(rewards_before)
         rewards_after = np.array(rewards_after)
-        print(f"{rewards_before.std()} - {rewards_after.std()}")
-        print(f"{self.running_rew_mean} - {self.running_rew_std}")
+        print(f"before_std={rewards_before.std()} - after_std={rewards_after.std()}")
+        print(f"run_mean={self.running_rew_mean} - run_std={self.running_rew_std}")
+
+        # mean rewards per step
+        step_rewards = ep_rewards.mean() / ep_steps.mean()
 
         self.logger.log({
             "ep_raw_reward_mean": ep_raw_rewards.mean(),
             "ep_raw_reward_std": ep_raw_rewards.std(),
+            "per_step_reward_mean": step_rewards,
             "ep_reward_mean": ep_rewards.mean(),
             "ep_reward_std": ep_rewards.std(),
             "ep_len_mean": ep_steps.mean(),
