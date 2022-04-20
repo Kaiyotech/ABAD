@@ -44,7 +44,7 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=10
     )
-    run_id = "Run1"
+    run_id = "Run10433"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store", name="ABADv4", project="ABAD", entity="kaiyotech", id=run_id, config=config)
 
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         device="cuda",
     )
 
-    # alg.load("checkpoint_save_directory/ABAD_1650173239.4712064/ABAD_210/checkpoint.pt")
+    alg.load("checkpoint_save_directory/ABAD_1650424890.7039125/ABAD_150/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
