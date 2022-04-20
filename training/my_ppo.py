@@ -274,12 +274,12 @@ class PPO:
             episode_starts[0] = 1.
 
             # T ODO testing
-            # rewards_before.append(rewards.sum())
+            rewards_before.append(rewards.sum())
             # normalize before update
             ep_raw_rewards.append(rewards.sum())
             rewards = self._normalize_reward(rewards)
             # T ODO testing
-            # rewards_after.append(rewards.sum())
+            rewards_after.append(rewards.sum())
 
             advantages = self._calculate_advantages_numba(rewards, values, self.gamma, self.gae_lambda)
 
