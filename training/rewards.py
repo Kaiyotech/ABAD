@@ -3,7 +3,7 @@ from rlgym_tools.extra_rewards.anneal_rewards import AnnealRewards
 
 
 def anneal_rewards_fn():
-    max_steps = 1_000_000  # 20_000_000
+    max_steps = 1  # 20_000_000
     # when annealing, change the weights between 1 and 2, 2 is new
     reward1 = MyOldRewardFunction(
         team_spirit=0,
@@ -26,7 +26,7 @@ def anneal_rewards_fn():
 
     reward2 = MyRewardFunction(
         team_spirit=0,
-        goal_w=4,
+        goal_w=2,
         aerial_goal_w=10,
         double_tap_goal_w=20,
         shot_w=0.8,
@@ -36,7 +36,7 @@ def anneal_rewards_fn():
         got_demoed_w=0,
         behind_ball_w=0.05,
         save_boost_w=0.003,
-        concede_w=-3,
+        concede_w=-2,
         velocity_w=0.01,
         velocity_pb_w=0.05,
         velocity_bg_w=0.2,

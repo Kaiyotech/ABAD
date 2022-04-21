@@ -114,7 +114,7 @@ if __name__ == "__main__":
         device="cuda",
     )
 
-    alg.load("checkpoint_save_directory/ABAD_1650424890.7039125/ABAD_150/checkpoint.pt")
+    alg.load("checkpoint_save_directory/ABAD_1650517742.909211/ABAD_350/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
