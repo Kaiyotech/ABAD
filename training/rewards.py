@@ -1,6 +1,7 @@
 from utils.mybots_rewards import *
 from rlgym_tools.extra_rewards.anneal_rewards import AnnealRewards
 from rlgym_tools.extra_rewards.kickoff_reward import KickoffReward
+from rlgym.utils.gamestates import GameState, PlayerData
 
 
 def anneal_rewards_fn():
