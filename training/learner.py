@@ -1,32 +1,23 @@
 import os
 import wandb
-import numpy
-from typing import Any
 
 import torch.jit
 from torch.nn import Linear, Sequential, ReLU
 
 from redis import Redis
 
-from rlgym.utils.obs_builders.advanced_obs import AdvancedObs
-from rlgym.utils.gamestates import PlayerData, GameState
-from training.rewards import anneal_rewards_fn, MyRewardFunction
-from rlgym_tools.extra_action_parsers.kbm_act import KBMAction
+from training.rewards import anneal_rewards_fn
+from utils.nectoparser import NectoAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
 from training.agent import DiscretePolicy
 from training.my_ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
-from rocket_learn.utils.util import ExpandAdvancedObs, SplitLayer
+from rocket_learn.utils.util import SplitLayer
+from utils.mybots_obs import ExpandAdvancedStackObs
 
 from training.Constants import *
-
-
-# ROCKET-LEARN ALWAYS EXPECTS A BATCH DIMENSION IN THE BUILT OBSERVATION
-class ExpandAdvancedObs(AdvancedObs):
-    def build_obs(self, player: PlayerData, state: GameState, previous_action: numpy.ndarray) -> Any:
-        obs = super(ExpandAdvancedObs, self).build_obs(player, state, previous_action)
-        return numpy.expand_dims(obs, 0)
+from utils.misc import count_parameters
 
 
 if __name__ == "__main__":
@@ -44,21 +35,21 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=10
     )
-    run_id = "Run10433"
+    run_id = "Run1"
     wandb.login(key=os.environ["WANDB_KEY"])
-    logger = wandb.init(dir="wandb_store", name="ABADv4", project="ABAD", entity="kaiyotech", id=run_id, config=config)
+    logger = wandb.init(dir="wandb_store", name="CoyoteV2", project="Coyote", entity="kaiyotech", id=run_id, config=config)
 
     redis = Redis(username="user1", password=os.environ["redis_user1_key"])
 
     # ENSURE OBSERVATION, REWARD, AND ACTION CHOICES ARE THE SAME IN THE WORKER
     def obs():
-        return ExpandAdvancedObs()
+        return ExpandAdvancedStackObs(8)
 
     def rew():
         return anneal_rewards_fn()
 
     def act():
-        return KBMAction()  # KBMAction(n_bins=N_BINS)
+        return NectoAction()  # KBMAction(n_bins=N_BINS)
 
     # THE ROLLOUT GENERATOR CAPTURES INCOMING DATA THROUGH REDIS AND PASSES IT TO THE LEARNER.
     # -save_every SPECIFIES HOW OFTEN OLD VERSIONS ARE SAVED TO REDIS. THESE ARE USED FOR TRUESKILL
@@ -69,11 +60,12 @@ if __name__ == "__main__":
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
     # THE ACTIONS THEMSELVES. SEE network_setup.readme.txt FOR MORE INFORMATION
-    split = (3, 3, 2, 2, 2)
+    split = (3, 3, 3, 3, 3,  2, 2, 2)
     total_output = sum(split)
 
     # TOTAL SIZE OF THE INPUT DATA
-    state_dim = 107
+    # 107+stack_size*actions
+    state_dim = 107 + (8*8)    # normal is 107
 
     critic = Sequential(
         Linear(state_dim, 256),
@@ -99,6 +91,11 @@ if __name__ == "__main__":
 
     agent = ActorCriticAgent(actor=actor, critic=critic, optimizer=optim)
 
+    params = count_parameters(agent)
+    print(f"Number of parameters is {params}")
+    # logger.config["Params"] = params
+    # logger.
+
     alg = PPO(
         rollout_gen,
         agent,
@@ -114,7 +111,7 @@ if __name__ == "__main__":
         device="cuda",
     )
 
-    alg.load("checkpoint_save_directory/ABAD_1650517742.909211/ABAD_350/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1650597948.8723352/Coyote_70/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")

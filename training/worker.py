@@ -1,5 +1,3 @@
-from typing import Any
-import numpy
 import sys
 import os
 import torch
@@ -8,29 +6,23 @@ import ctypes
 from redis import Redis
 
 from rlgym.envs import Match
-from rlgym.utils.gamestates import PlayerData, GameState
 from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition
-from rlgym.utils.reward_functions.default_reward import DefaultReward
 from utils.mybots_statesets import WallDribble, GroundAirDribble
-from rocket_learn.utils.util import ExpandAdvancedObs
-from rlgym.utils.obs_builders.advanced_obs import AdvancedObs
-from rlgym_tools.extra_action_parsers.kbm_act import KBMAction
 from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
-from rlgym.utils.action_parsers.discrete_act import DiscreteAction
+from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
+from rlgym_tools.extra_state_setters.symmetric_setter import KickoffLikeSetter
+from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
+from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
+from rlgym.utils.state_setters.default_state import DefaultState
+from utils.mybots_obs import ExpandAdvancedStackObs
+
+from utils.nectoparser import NectoAction
 
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 
 from training.Constants import *
-from training.rewards import anneal_rewards_fn, MyRewardFunction
-from utils.mybots_terminals import *
+from training.rewards import anneal_rewards_fn
 from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
-
-
-# ROCKET-LEARN ALWAYS EXPECTS A BATCH DIMENSION IN THE BUILT OBSERVATION
-class ExpandAdvancedObs(AdvancedObs):
-    def build_obs(self, player: PlayerData, state: GameState, previous_action: numpy.ndarray) -> Any:
-        obs = super(ExpandAdvancedObs, self).build_obs(player, state, previous_action)
-        return numpy.expand_dims(obs, 0)
 
 
 if __name__ == "__main__":
@@ -59,16 +51,50 @@ if __name__ == "__main__":
                             swap_front_back=False,
                             swap_left_right=False,
                             ),
+                        AugmentSetter(
+                            KickoffLikeSetter(
+                                cars_on_ground=True,
+                                ball_on_ground=True,
+                                )
+                            ),
+                        AugmentSetter(
+                            KickoffLikeSetter(
+                                cars_on_ground=False,
+                                ball_on_ground=False,
+                            )
+                        ),
+                        AugmentSetter(
+                            WallPracticeState()
+                            ),
+                        AugmentSetter(
+                            GoaliePracticeState(
+                                allow_enemy_interference=True,
+                                aerial_only=False,
+                                first_defender_in_goal=True,
+                                reset_to_max_boost=False,
+                                )
+                            ),
+                        AugmentSetter(
+                            HoopsLikeSetter()
+                        ),
+                        DefaultState()  # this is kickoff normal
                         ),
                         (
-                        0.5,
-                        0.5,
+                        0.05,  # groundair
+                        0.05,  # wallair
+                        0.45,  # kickofflike ground
+                        0.05,  # kickofflike air
+                        0.075,  # wall
+                        0.10,  # goalie
+                        0.075,  # hoops
+                        0.15,  # default kickoff
                         ),
                     ),
-        obs_builder=ExpandAdvancedObs(),
-        action_parser=KBMAction(),
-        terminal_conditions=[TimeoutCondition(round(20 // T_STEP)),
-                             GoalScoredCondition(), BallTouchGroundCondition(round(3 // T_STEP))],
+        obs_builder=ExpandAdvancedStackObs(8),
+        action_parser=NectoAction(),
+        terminal_conditions=[TimeoutCondition(round(60 // T_STEP)),
+                             GoalScoredCondition(),
+                             ],
         reward_function=anneal_rewards_fn()
     )
 
@@ -79,5 +105,5 @@ if __name__ == "__main__":
                        past_version_prob=0.2,
                        streamer_mode=streamer_mode,
                        send_gamestates=False,
-                       evaluation_prob=0.0,
+                       evaluation_prob=0.01,
                        ).run()
