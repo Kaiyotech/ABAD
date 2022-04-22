@@ -3,43 +3,43 @@ from rlgym_tools.extra_rewards.anneal_rewards import AnnealRewards
 
 
 def anneal_rewards_fn():
-    max_steps = 1  # 20_000_000
+    max_steps = 15_000_000  # 20_000_000
     # when annealing, change the weights between 1 and 2, 2 is new
     reward1 = MyOldRewardFunction(
         team_spirit=0,
-        goal_w=1.3,
-        aerial_goal_w=5,
-        double_tap_goal_w=15,
-        shot_w=0.4,
-        save_w=0.6,
-        demo_w=0,
-        above_w=0,
-        got_demoed_w=0,
-        behind_ball_w=0.03,
-        save_boost_w=0.001,
-        concede_w=-2,
-        velocity_w=0.003,
-        velocity_pb_w=0.025,
-        velocity_bg_w=0.075,
-        ball_touch_w=15,
-    )
-
-    reward2 = MyRewardFunction(
-        team_spirit=0,
-        goal_w=2,
+        goal_w=1,
         aerial_goal_w=10,
         double_tap_goal_w=20,
         shot_w=0.8,
-        save_w=0.6,
+        save_w=0.8,
         demo_w=0,
         above_w=0,
         got_demoed_w=0,
         behind_ball_w=0.05,
         save_boost_w=0.003,
-        concede_w=-2,
-        velocity_w=0.01,
+        concede_w=-1,
+        velocity_w=0.03,
+        velocity_pb_w=0.75,
+        velocity_bg_w=1,
+        ball_touch_w=15,
+    )
+
+    reward2 = MyRewardFunction(
+        team_spirit=0,
+        goal_w=3,
+        aerial_goal_w=10,
+        double_tap_goal_w=20,
+        shot_w=0.8,
+        save_w=0.8,
+        demo_w=0,
+        above_w=0,
+        got_demoed_w=0,
+        behind_ball_w=0.05,
+        save_boost_w=0.003,
+        concede_w=-3,
+        velocity_w=0.03,
         velocity_pb_w=0.05,
-        velocity_bg_w=0.2,
+        velocity_bg_w=0.5,
         ball_touch_w=15,
     )
 

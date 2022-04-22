@@ -444,9 +444,10 @@ class PPO:
         self.agent.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.running_rew_mean = checkpoint['reward_norm_mean']
         # self.running_rew_std = checkpoint['reward_norm_std']
-        self.running_rew_var = checkpoint['rward_norm_var']  # TODO fix typo
+        self.running_rew_var = checkpoint['reward_norm_var']  # TODO fix typo
         self.running_rew_count = checkpoint['reward_norm_count']
-        self.ema_reward_discount = checkpoint['ema_reward_didscount']  # TODO fix typo
+        self.ema_reward_discount = checkpoint['ema_reward_discount']  # TODO fix typo
+        self.running_rew_std = np.sqrt(self.running_rew_var)
 
         if continue_iterations:
             self.starting_iteration = checkpoint['epoch']
