@@ -56,7 +56,9 @@ if __name__ == "__main__":
     # COMPARISON AND TRAINING AGAINST PREVIOUS VERSIONS
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
-                                        save_every=logger.config.iterations_per_save)
+                                        save_every=logger.config.iterations_per_save,
+                                        clear=True,  # update this if rolling back
+                                        )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
     # THE ACTIONS THEMSELVES. SEE network_setup.readme.txt FOR MORE INFORMATION
@@ -111,7 +113,7 @@ if __name__ == "__main__":
         device="cuda",
     )
 
-    alg.load("checkpoint_save_directory/Coyote_1650597948.8723352/Coyote_70/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/Coyote_1650597948.8723352/Coyote_70/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
