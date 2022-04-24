@@ -21,7 +21,7 @@ from utils.nectoparser import NectoAction
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 
 from training.Constants import *
-from training.rewards import anneal_rewards_fn
+from training.rewards import anneal_rewards_fn, MyRewardFunction
 from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 
 
@@ -98,7 +98,26 @@ if __name__ == "__main__":
         terminal_conditions=[TimeoutCondition(round(180 // T_STEP)),
                              GoalScoredCondition(),
                              ],
-        reward_function=anneal_rewards_fn()
+        reward_function=MyRewardFunction(
+            team_spirit=0.2,
+            goal_w=7,
+            aerial_goal_w=10,
+            double_tap_goal_w=0,
+            shot_w=0.8,
+            save_w=1.2,
+            demo_w=1,
+            above_w=0,
+            got_demoed_w=-1,
+            behind_ball_w=0.05,
+            save_boost_w=0.1,
+            concede_w=-7,
+            velocity_w=0.05,
+            velocity_pb_w=0.25,
+            velocity_bg_w=1.5,
+            aerial_ball_touch_w=15,
+            kickoff_w=0.5,
+            ball_touch_w=0,
+        )
     )
 
     r = Redis(host="127.0.0.1", username="user1", password=os.environ["redis_user1_key"])

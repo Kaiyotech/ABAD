@@ -4,7 +4,7 @@ from rlgym_tools.extra_rewards.kickoff_reward import KickoffReward
 
 
 def anneal_rewards_fn():
-    max_steps = 10_000_000  # 20_000_000
+    max_steps = 1  # 20_000_000
     # when annealing, change the weights between 1 and 2, 2 is new
     reward1 = MyRewardFunction(
         team_spirit=0.1,

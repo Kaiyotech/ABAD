@@ -6,7 +6,7 @@ from torch.nn import Linear, Sequential, ReLU
 
 from redis import Redis
 
-from training.rewards import anneal_rewards_fn
+from training.rewards import anneal_rewards_fn, MyRewardFunction
 from utils.nectoparser import NectoAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
@@ -46,7 +46,26 @@ if __name__ == "__main__":
         return ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3)
 
     def rew():
-        return anneal_rewards_fn()
+        return MyRewardFunction(
+            team_spirit=0.2,
+            goal_w=7,
+            aerial_goal_w=10,
+            double_tap_goal_w=0,
+            shot_w=0.8,
+            save_w=1.2,
+            demo_w=1,
+            above_w=0,
+            got_demoed_w=-1,
+            behind_ball_w=0.05,
+            save_boost_w=0.1,
+            concede_w=-7,
+            velocity_w=0.05,
+            velocity_pb_w=0.25,
+            velocity_bg_w=1.5,
+            aerial_ball_touch_w=15,
+            kickoff_w=0.5,
+            ball_touch_w=0,
+        )
 
     def act():
         return NectoAction()  # KBMAction(n_bins=N_BINS)
@@ -114,7 +133,7 @@ if __name__ == "__main__":
         device="cuda",
     )
 
-    alg.load("checkpoint_save_directory/Coyote_1650778705.3403544/Coyote_120/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1650809398.7925944/Coyote_210/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
