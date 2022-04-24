@@ -182,3 +182,19 @@ class Demoed(RewardFunction):
         else:
             return 0
 
+
+# class GetBoostReward(RewardFunction):
+#     def reset(self, initial_state: GameState):  # TODO fix this to be better
+#         self.last =
+#
+#     def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+#         # return 1 reward for picking up full pad
+#         self.
+#         return np.sqrt(player.boost_amount)
+#
+#     boost_diff = np.sqrt(player.boost_amount) - np.sqrt(last.boost_amount)
+#     if boost_diff >= 0:
+#         player_rewards[i] += self.boost_gain_w * boost_diff
+#     else:
+#         player_rewards[i] += self.boost_lose_w * boost_diff
+

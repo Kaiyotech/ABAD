@@ -95,7 +95,7 @@ if __name__ == "__main__":
                     ),
         obs_builder=ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3),
         action_parser=NectoAction(),
-        terminal_conditions=[TimeoutCondition(round(60 // T_STEP)),
+        terminal_conditions=[TimeoutCondition(round(180 // T_STEP)),
                              GoalScoredCondition(),
                              ],
         reward_function=anneal_rewards_fn()

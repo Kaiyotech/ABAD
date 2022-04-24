@@ -4,28 +4,9 @@ from rlgym_tools.extra_rewards.kickoff_reward import KickoffReward
 
 
 def anneal_rewards_fn():
-    max_steps = 1  # 20_000_000
+    max_steps = 10_000_000  # 20_000_000
     # when annealing, change the weights between 1 and 2, 2 is new
-    reward1 = MyOldRewardFunction(
-        team_spirit=0,
-        goal_w=3,
-        aerial_goal_w=10,
-        double_tap_goal_w=20,
-        shot_w=0.8,
-        save_w=0.8,
-        demo_w=0,
-        above_w=0,
-        got_demoed_w=0,
-        behind_ball_w=0.05,
-        save_boost_w=0.003,
-        concede_w=-3,
-        velocity_w=0.03,
-        velocity_pb_w=0.05,
-        velocity_bg_w=0.5,
-        ball_touch_w=15,
-    )
-
-    reward2 = MyRewardFunction(
+    reward1 = MyRewardFunction(
         team_spirit=0.1,
         goal_w=5,
         aerial_goal_w=10,
@@ -44,6 +25,27 @@ def anneal_rewards_fn():
         aerial_ball_touch_w=15,
         kickoff_w=0.25,
         ball_touch_w=0.05,
+    )
+
+    reward2 = MyRewardFunction(
+        team_spirit=0.2,
+        goal_w=7,
+        aerial_goal_w=10,
+        double_tap_goal_w=0,
+        shot_w=0.8,
+        save_w=1.2,
+        demo_w=1,
+        above_w=0,
+        got_demoed_w=-1,
+        behind_ball_w=0.05,
+        save_boost_w=0.05,
+        concede_w=-7,
+        velocity_w=0.2,
+        velocity_pb_w=0.25,
+        velocity_bg_w=1.5,
+        aerial_ball_touch_w=15,
+        kickoff_w=0.5,
+        ball_touch_w=0,
     )
 
     alternating_rewards_steps = [reward1, max_steps, reward2]
