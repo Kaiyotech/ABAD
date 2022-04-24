@@ -5,10 +5,19 @@ cd ..
 start python -m training.learner
 TIMEOUT 10
 REM start python worker.py STREAMER
-start python -m training.worker
-pause
 :loop
-FOR /L %%G IN (1,1,5) DO (start python -m training.worker & TIMEOUT 60)
+REM FOR /L %%G IN (1,1,5) DO (start python -m training.worker & TIMEOUT 60)
+start python -m training.worker 1
+pause
+start python -m training.worker 1
+TIMEOUT 60
+start python -m training.worker 1
+TIMEOUT 60
+start python -m training.worker 2
+TIMEOUT 60
+start python -m training.worker 3
+TIMEOUT 60
+start python -m training.worker 3
 TIMEOUT 180
 nircmd win min process "RocketLeague.exe"
 REM TIMEOUT 10800
