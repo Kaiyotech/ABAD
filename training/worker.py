@@ -14,7 +14,7 @@ from rlgym_tools.extra_state_setters.symmetric_setter import KickoffLikeSetter
 from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
 from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
 from rlgym.utils.state_setters.default_state import DefaultState
-from utils.mybots_obs import ExpandAdvancedStackObs
+from utils.mybots_obs import ExpandAdvancedPaddedStackObs
 
 from utils.nectoparser import NectoAction
 
@@ -30,14 +30,17 @@ if __name__ == "__main__":
     torch.set_num_threads(1)
     streamer_mode = False
     game_speed = 100
+    team_size = 1
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'STREAMER':
+        team_size = int(sys.argv[1])
+    if len(sys.argv) > 2:
+        if sys.argv[2] == 'STREAMER':
             streamer_mode = True
             game_speed = 1
     match = Match(
         game_speed=game_speed,
         self_play=True,
-        team_size=1,
+        team_size=team_size,
         state_setter=WeightedSampleSetter((
                         AugmentSetter(
                             GroundAirDribble(),
@@ -66,31 +69,31 @@ if __name__ == "__main__":
                         AugmentSetter(
                             WallPracticeState()
                             ),
-                        AugmentSetter(
-                            GoaliePracticeState(
-                                allow_enemy_interference=True,
-                                aerial_only=False,
-                                first_defender_in_goal=True,
-                                reset_to_max_boost=False,
-                                )
-                            ),
+                        # AugmentSetter(
+                        #     GoaliePracticeState(
+                        #         allow_enemy_interference=True,
+                        #         aerial_only=False,
+                        #         first_defender_in_goal=True,
+                        #         reset_to_max_boost=False,
+                        #         )
+                        #     ),
                         AugmentSetter(
                             HoopsLikeSetter()
                         ),
                         DefaultState()  # this is kickoff normal
                         ),
                         (
-                        0.05,  # groundair
-                        0.05,  # wallair
+                        0.1,  # groundair
+                        0.1,  # wallair
                         0.45,  # kickofflike ground
                         0.05,  # kickofflike air
                         0.075,  # wall
-                        0.10,  # goalie
+                        # 0.10,  # goalie
                         0.075,  # hoops
                         0.15,  # default kickoff
                         ),
                     ),
-        obs_builder=ExpandAdvancedStackObs(8),
+        obs_builder=ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3),
         action_parser=NectoAction(),
         terminal_conditions=[TimeoutCondition(round(60 // T_STEP)),
                              GoalScoredCondition(),

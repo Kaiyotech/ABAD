@@ -37,6 +37,8 @@ class NectoAction(ActionParser):
                             handbrake = jump == 1 and (pitch != 0 or yaw != 0 or roll != 0)
                             actions.append([boost, yaw, pitch, yaw, roll, jump, boost, handbrake])
         actions = np.array(actions)
+        # actions = np.array([0, 0, 1, 0, 0, 1, 0, 0])
+        # print(actions)
         return actions
 
     def get_action_space(self) -> gym.spaces.Space:
@@ -61,6 +63,7 @@ class NectoAction(ActionParser):
             else:
                 parsed_actions.append(action)
 
+        # print(parsed_actions)
         return np.asarray(parsed_actions)
 
 

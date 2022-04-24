@@ -14,7 +14,7 @@ from training.agent import DiscretePolicy
 from training.my_ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import SplitLayer
-from utils.mybots_obs import ExpandAdvancedStackObs
+from utils.mybots_obs import ExpandAdvancedPaddedStackObs
 
 from training.Constants import *
 from utils.misc import count_parameters
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     # ENSURE OBSERVATION, REWARD, AND ACTION CHOICES ARE THE SAME IN THE WORKER
     def obs():
-        return ExpandAdvancedStackObs(8)
+        return ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3)
 
     def rew():
         return anneal_rewards_fn()
@@ -62,12 +62,13 @@ if __name__ == "__main__":
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
     # THE ACTIONS THEMSELVES. SEE network_setup.readme.txt FOR MORE INFORMATION
-    split = (3, 3, 3, 3, 3,  2, 2, 2)
+    # split = (3, 3, 3, 3, 3,  2, 2, 2)
+    split = (90,)  # updated for Necto parser
     total_output = sum(split)
 
     # TOTAL SIZE OF THE INPUT DATA
     # 107+stack_size*actions
-    state_dim = 107 + (8*8)    # normal is 107
+    state_dim = 231 + (8*5)    # normal is 107
 
     critic = Sequential(
         Linear(state_dim, 256),
