@@ -277,7 +277,7 @@ class PPO:
             rewards_before.append(rewards.sum())
             # normalize before update
             ep_raw_rewards.append(rewards.sum())
-            rewards = self._normalize_reward(rewards)
+            # rewards = self._normalize_reward(rewards)  # TODO testing without norm
             # T ODO testing
             rewards_after.append(rewards.sum())
 
