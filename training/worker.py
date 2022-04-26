@@ -99,7 +99,7 @@ if __name__ == "__main__":
                              GoalScoredCondition(),
                              ],
         reward_function=MyRewardFunction(
-            team_spirit=0,
+            team_spirit=0.1,
             goal_w=7,
             aerial_goal_w=10,
             double_tap_goal_w=0,
@@ -115,7 +115,7 @@ if __name__ == "__main__":
             velocity_pb_w=0.5,
             velocity_bg_w=2,
             aerial_ball_touch_w=15,
-            kickoff_w=1,
+            kickoff_w=0.5,
             ball_touch_w=0,
         )
     )

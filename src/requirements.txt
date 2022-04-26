@@ -1,0 +1,10 @@
+rlbot==1.*
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==1.9.1+cpu
+rlgym-compat>=1.0.2
+numpy
+pip
+pickle5
+rlgym
+gym
+rlgym_tools

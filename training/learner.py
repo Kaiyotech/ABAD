@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     def rew():
         return MyRewardFunction(
-            team_spirit=0,
+            team_spirit=0.1,
             goal_w=7,
             aerial_goal_w=10,
             double_tap_goal_w=0,
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             velocity_pb_w=0.5,
             velocity_bg_w=2,
             aerial_ball_touch_w=15,
-            kickoff_w=1,
+            kickoff_w=0.5,
             ball_touch_w=0,
         )
 
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1650856936.9338183/Coyote_390/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1650901382.524019/Coyote_530/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
