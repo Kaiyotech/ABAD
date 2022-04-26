@@ -83,10 +83,10 @@ if __name__ == "__main__":
                         DefaultState()  # this is kickoff normal
                         ),
                         (
-                        0.1,  # groundair
-                        0.1,  # wallair
-                        0.45,  # kickofflike ground
-                        0.05,  # kickofflike air
+                        0.05,  # groundair
+                        0.05,  # wallair
+                        0.5,  # kickofflike ground
+                        0.1,  # kickofflike air
                         0.075,  # wall
                         # 0.10,  # goalie
                         0.075,  # hoops
@@ -95,27 +95,27 @@ if __name__ == "__main__":
                     ),
         obs_builder=ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3),
         action_parser=NectoAction(),
-        terminal_conditions=[TimeoutCondition(round(180 // T_STEP)),
+        terminal_conditions=[TimeoutCondition(round(300 // T_STEP)),
                              GoalScoredCondition(),
                              ],
         reward_function=MyRewardFunction(
             team_spirit=0.1,
-            goal_w=7,
+            goal_w=10,
             aerial_goal_w=10,
             double_tap_goal_w=0,
-            shot_w=0.8,
+            shot_w=1,
             save_w=1.2,
             demo_w=1,
             above_w=0,
             got_demoed_w=-1,
             behind_ball_w=0.05,
-            save_boost_w=0.2,
+            save_boost_w=0.3,
             concede_w=-7,
-            velocity_w=0.05,
+            velocity_w=0,
             velocity_pb_w=0.5,
             velocity_bg_w=2,
             aerial_ball_touch_w=15,
-            kickoff_w=0.5,
+            kickoff_w=0,
             ball_touch_w=0,
         )
     )
@@ -124,8 +124,8 @@ if __name__ == "__main__":
     RedisRolloutWorker(r,
                        "Kaiyotech",
                        match,
-                       past_version_prob=0.1,
+                       past_version_prob=0.2,
                        streamer_mode=streamer_mode,
                        send_gamestates=False,
-                       evaluation_prob=0,
+                       evaluation_prob=0.01,
                        ).run()
