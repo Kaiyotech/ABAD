@@ -68,8 +68,6 @@ class Coyote(BaseAgent):
         return self.controls
 
     def update_controls(self, action):
-        action = action[0]
-        print(action)
         self.controls.throttle = action[0]
         self.controls.steer = action[1]
         self.controls.pitch = action[2]

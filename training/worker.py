@@ -108,15 +108,16 @@ if __name__ == "__main__":
             demo_w=1,
             above_w=0,
             got_demoed_w=-1,
-            behind_ball_w=0.05,
-            save_boost_w=0.3,
-            concede_w=-7,
-            velocity_w=0,
+            behind_ball_w=0,
+            save_boost_w=0,
+            concede_w=-10,
+            velocity_w=0.001,
             velocity_pb_w=0.5,
             velocity_bg_w=2,
             aerial_ball_touch_w=15,
-            kickoff_w=0,
-            ball_touch_w=0,
+            kickoff_w=0.05,
+            ball_touch_w=0.001,
+            touch_grass_w=0.001,
         )
     )
 

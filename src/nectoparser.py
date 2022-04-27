@@ -64,6 +64,7 @@ class NectoAction(ActionParser):
                 parsed_actions.append(action)
 
         # print(parsed_actions)
+        parsed_actions = parsed_actions[0]
         return np.asarray(parsed_actions)
 
 
