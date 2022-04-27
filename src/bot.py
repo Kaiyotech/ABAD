@@ -14,8 +14,7 @@ class Coyote(BaseAgent):
     def __init__(self, name, team, index, beta=1):
         super().__init__(name, team, index)
 
-        self.obs_builder = ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3)
-        self.act_parser = NectoAction()
+        self.obs_builder = None
         self.agent = Agent()
         self.tick_skip = 8
 
@@ -29,7 +28,7 @@ class Coyote(BaseAgent):
     def initialize_agent(self):
         # Initialize the rlgym GameState object now that the game is active and the info is available
         field_info = self.get_field_info()
-        # self.obs_builder = NectoObsBuilder(field_info=field_info)
+        self.obs_builder = ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3)
         self.game_state = GameState(field_info)
         self.ticks = self.tick_skip  # So we take an action the first tick
         self.prev_time = 0
@@ -69,6 +68,8 @@ class Coyote(BaseAgent):
         return self.controls
 
     def update_controls(self, action):
+        action = action[0]
+        print(action)
         self.controls.throttle = action[0]
         self.controls.steer = action[1]
         self.controls.pitch = action[2]
