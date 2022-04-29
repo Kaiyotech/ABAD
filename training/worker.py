@@ -129,8 +129,8 @@ if __name__ == "__main__":
     RedisRolloutWorker(r,
                        "Kaiyotech",
                        match,
-                       past_version_prob=0.2,
+                       past_version_prob=0,
                        streamer_mode=streamer_mode,
                        send_gamestates=False,
-                       evaluation_prob=0.01,
+                       evaluation_prob=0,
                        ).run()
