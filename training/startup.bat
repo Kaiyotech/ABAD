@@ -13,11 +13,11 @@ start python -m training.worker 1
 TIMEOUT 60
 start python -m training.worker 1
 TIMEOUT 60
-start python -m training.worker 1
+start python -m training.worker 2
 TIMEOUT 60
-start python -m training.worker 1
+start python -m training.worker 3
 TIMEOUT 60
-start python -m training.worker 1
+start python -m training.worker 3
 TIMEOUT 180
 nircmd win min process "RocketLeague.exe"
 REM TIMEOUT 10800
