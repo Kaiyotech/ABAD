@@ -7,14 +7,14 @@ from redis import Redis
 
 from rlgym.envs import Match
 from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition
-from utils.mybots_statesets import WallDribble, GroundAirDribble
+from utils.mybots_statesets import WallDribble, GroundAirDribble, BallFrontGoalState
 from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
 from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
 from rlgym_tools.extra_state_setters.symmetric_setter import KickoffLikeSetter
 from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
 from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
 from rlgym.utils.state_setters.default_state import DefaultState
-from utils.mybots_obs import ExpandAdvancedPaddedStackObs
+from utils.mybots_obs import ExpandAdvancedPaddedObs
 
 from utils.nectoparser import NectoAction
 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
                         AugmentSetter(
                             WallPracticeState()
                             ),
-                        # AugmentSetter(
+                        # AugmentSetter(  # TODO don't use this unti you don't allow random goals
                         #     GoaliePracticeState(
                         #         allow_enemy_interference=True,
                         #         aerial_only=False,
@@ -80,44 +80,48 @@ if __name__ == "__main__":
                         AugmentSetter(
                             HoopsLikeSetter()
                         ),
-                        DefaultState()  # this is kickoff normal
+                        DefaultState(),  # this is kickoff normal
+                        AugmentSetter(
+                            BallFrontGoalState(),
+                        ),
                         ),
                         (
-                        0.05,  # groundair
-                        0.05,  # wallair
-                        0.5,  # kickofflike ground
-                        0.1,  # kickofflike air
-                        0.075,  # wall
+                        0.0,  # groundair
+                        0.0,  # wallair
+                        0.45,  # kickofflike ground
+                        0.05,  # kickofflike air
+                        0.0,  # wall
                         # 0.10,  # goalie
-                        0.075,  # hoops
-                        0.15,  # default kickoff
+                        0.05,  # hoops
+                        0.25,  # default kickoff
+                        0.20,  # ball front goal
                         ),
                     ),
-        obs_builder=ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3),
+        obs_builder=ExpandAdvancedPaddedObs(),
         action_parser=NectoAction(),
         terminal_conditions=[TimeoutCondition(round(300 // T_STEP)),
                              GoalScoredCondition(),
                              ],
         reward_function=MyRewardFunction(
-            team_spirit=0.1,
+            team_spirit=0,
             goal_w=10,
             aerial_goal_w=10,
             double_tap_goal_w=0,
-            shot_w=1,
-            save_w=1.2,
-            demo_w=1,
+            shot_w=0.5,
+            save_w=0.5,
+            demo_w=2,
             above_w=0,
-            got_demoed_w=-1,
+            got_demoed_w=-2,
             behind_ball_w=0,
             save_boost_w=0,
             concede_w=-10,
             velocity_w=0.001,
             velocity_pb_w=0.5,
-            velocity_bg_w=2,
+            velocity_bg_w=1,
             aerial_ball_touch_w=15,
-            kickoff_w=0.05,
-            ball_touch_w=0.001,
-            touch_grass_w=0.001,
+            kickoff_w=0.1,
+            ball_touch_w=0.005,
+            touch_grass_w=-0.005,
         )
     )
 

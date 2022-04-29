@@ -205,6 +205,6 @@ class TouchGrass(RewardFunction):
 
     def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
         if player.on_ground:
-            return -1
+            return 1
         else:
             return 0

@@ -14,7 +14,7 @@ from training.agent import DiscretePolicy
 from training.my_ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import SplitLayer
-from utils.mybots_obs import ExpandAdvancedPaddedStackObs
+from utils.mybots_obs import ExpandAdvancedPaddedObs
 
 from training.Constants import *
 from utils.misc import count_parameters
@@ -24,48 +24,54 @@ if __name__ == "__main__":
     config = dict(
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=1e-4,
-        learning_rate_actor=1e-4,
-        ent_coef=0.005,
+        learning_rate_critic=5e-4,
+        learning_rate_actor=5e-4,
+        ent_coef=0.01,
         vf_coef=1.,
-        target_steps=1_000_000,
-        batch_size=200_000,
-        minibatch_size=100_000,
+        target_steps=1_00_000,  # testing 2M normal
+        batch_size=20_000,  # testing 200k normal
+        minibatch_size=None,
         n_bins=3,
         n_epochs=30,
-        iterations_per_save=10
+        iterations_per_save=5
     )
-    run_id = "Run2"
+    run_id = "Rungarbage"
     wandb.login(key=os.environ["WANDB_KEY"])
-    logger = wandb.init(dir="wandb_store", name="CoyoteV2_1", project="Coyote", entity="kaiyotech", id=run_id, config=config)
+    logger = wandb.init(dir="wandb_store",
+                        name="testing1",
+                        project="testing",
+                        entity="kaiyotech",
+                        id=run_id,
+                        config=config,
+                        )
 
     redis = Redis(username="user1", password=os.environ["redis_user1_key"])
 
     # ENSURE OBSERVATION, REWARD, AND ACTION CHOICES ARE THE SAME IN THE WORKER
     def obs():
-        return ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3)
+        return ExpandAdvancedPaddedObs()
 
     def rew():
         return MyRewardFunction(
-            team_spirit=0.1,
+            team_spirit=0,
             goal_w=10,
             aerial_goal_w=10,
             double_tap_goal_w=0,
-            shot_w=1,
-            save_w=1.2,
-            demo_w=1,
+            shot_w=0.5,
+            save_w=0.5,
+            demo_w=2,
             above_w=0,
-            got_demoed_w=-1,
+            got_demoed_w=-2,
             behind_ball_w=0,
             save_boost_w=0,
             concede_w=-10,
             velocity_w=0.001,
             velocity_pb_w=0.5,
-            velocity_bg_w=2,
+            velocity_bg_w=1,
             aerial_ball_touch_w=15,
-            kickoff_w=0.05,
-            ball_touch_w=0.001,
-            touch_grass_w=0.001,
+            kickoff_w=0.1,
+            ball_touch_w=0.005,
+            touch_grass_w=-0.005,
         )
 
     def act():
@@ -77,7 +83,7 @@ if __name__ == "__main__":
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        clear=False,  # update this if rolling back
+                                        clear=True,  # update this if starting over
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
@@ -88,7 +94,7 @@ if __name__ == "__main__":
 
     # TOTAL SIZE OF THE INPUT DATA
     # 107+stack_size*actions
-    state_dim = 231 + (8*5)    # normal is 107
+    state_dim = 231  # + (8*5)    # normal is 107
 
     critic = Sequential(
         Linear(state_dim, 256),
@@ -135,7 +141,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1650984903.1681545/Coyote_750/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/testing_1651205327.906578/testing_15/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")

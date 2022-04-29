@@ -261,5 +261,11 @@ class ExpandAdvancedPaddedStackObs(AdvancedActionStackingPaddingObs):
         return numpy.expand_dims(obs, 0)
 
 
+class ExpandAdvancedPaddedObs(AdvancedObsPadder):
+    def build_obs(self, player: PlayerData, state: GameState, previous_action: numpy.ndarray) -> Any:
+        obs = super(ExpandAdvancedPaddedObs, self).build_obs(player, state, previous_action)
+        return numpy.expand_dims(obs, 0)
+
+
 if __name__ == "__main__":
     pass

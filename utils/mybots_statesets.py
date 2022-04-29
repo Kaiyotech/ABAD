@@ -10,6 +10,25 @@ import math
 DEG_TO_RAD = 3.14159265 / 180
 
 
+class BallFrontGoalState(StateSetter):
+    def reset(self, state_wrapper: StateWrapper):
+        rng = np.random.default_rng()
+
+        y_choice = rand.choice([0, 2]) - 1
+
+        state_wrapper.ball.set_pos(x=rng.uniform(-1000, 1000), y=y_choice * rng.uniform(4500, 5000), z=0)
+        state_wrapper.ball.set_lin_vel(0, 0, 0)
+        state_wrapper.ball.set_ang_vel(0, 0, 0)
+
+        # Loop over every car in the game, skipping 1 since we already did it
+        for car in state_wrapper.cars:
+
+            # all cars random
+            car.set_pos(rng.uniform(-3500, 3500), rng.uniform(-4400, 4400), 17)
+            car.set_rot(0, rng.uniform(-180, 180) * (np.pi / 180), 0)
+            car.boost = 0.33
+
+
 class GroundAirDribble(StateSetter):
     def reset(self, state_wrapper: StateWrapper):
         rng = np.random.default_rng()

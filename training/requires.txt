@@ -28,3 +28,4 @@ psutil==5.9.0
 plotly==5.7.0
 rocket-learn==0.1.36
 prettytable==3.2.0
+runstats==2.0.0
