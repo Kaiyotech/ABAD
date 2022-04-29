@@ -24,22 +24,22 @@ if __name__ == "__main__":
     config = dict(
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=5e-4,
-        learning_rate_actor=5e-4,
+        learning_rate_critic=1e-4,
+        learning_rate_actor=1e-4,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=1_00_000,  # testing 2M normal
-        batch_size=20_000,  # testing 200k normal
+        target_steps=2_000_000,  # testing 2M normal
+        batch_size=200_000,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
         n_epochs=30,
-        iterations_per_save=5
+        iterations_per_save=5,
     )
-    run_id = "Rungarbage"
+    run_id = "Run432"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
-                        name="testing1",
-                        project="testing",
+                        name="CoyoteV3",
+                        project="Coyote",
                         entity="kaiyotech",
                         id=run_id,
                         config=config,
@@ -54,23 +54,23 @@ if __name__ == "__main__":
     def rew():
         return MyRewardFunction(
             team_spirit=0,
-            goal_w=10,
-            aerial_goal_w=10,
+            goal_w=5,
+            aerial_goal_w=5,
             double_tap_goal_w=0,
-            shot_w=0.5,
-            save_w=0.5,
-            demo_w=2,
+            shot_w=0.25,
+            save_w=0.25,
+            demo_w=1,
             above_w=0,
-            got_demoed_w=-2,
+            got_demoed_w=-1,
             behind_ball_w=0,
             save_boost_w=0,
-            concede_w=-10,
+            concede_w=-5,
             velocity_w=0.001,
-            velocity_pb_w=0.5,
-            velocity_bg_w=1,
-            aerial_ball_touch_w=15,
-            kickoff_w=0.1,
-            ball_touch_w=0.005,
+            velocity_pb_w=0.02,
+            velocity_bg_w=0.25,
+            aerial_ball_touch_w=10,
+            kickoff_w=0.25,
+            ball_touch_w=0.001,
             touch_grass_w=-0.005,
         )
 
@@ -138,6 +138,7 @@ if __name__ == "__main__":
         vf_coef=logger.config.vf_coef,
         logger=logger,
         device="cuda",
+        zero_grads_with_none=True,
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
