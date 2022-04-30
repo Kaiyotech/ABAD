@@ -57,20 +57,20 @@ if __name__ == "__main__":
             goal_w=5,
             aerial_goal_w=5,
             double_tap_goal_w=0,
-            shot_w=0.25,
-            save_w=0.25,
-            demo_w=1,
+            shot_w=1.5,
+            save_w=1.5,
+            demo_w=1.5,
             above_w=0,
-            got_demoed_w=-1,
+            got_demoed_w=-1.5,
             behind_ball_w=0,
             save_boost_w=0,
             concede_w=-5,
-            velocity_w=0.001,
-            velocity_pb_w=0.02,
+            velocity_w=0.01,
+            velocity_pb_w=0.15,
             velocity_bg_w=0.25,
             aerial_ball_touch_w=10,
             kickoff_w=0.25,
-            ball_touch_w=0.001,
+            ball_touch_w=0.05,
             touch_grass_w=-0.005,
         )
 
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1651208262.7824886/Coyote_30/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1651243080.7951534/Coyote_140/checkpoint.pt")
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")

@@ -10,13 +10,13 @@ REM FOR /L %%G IN (1,1,5) DO (start python -m training.worker & TIMEOUT 60)
 start python -m training.worker 1
 pause
 start python -m training.worker 1
-TIMEOUT 60
+TIMEOUT 30
 start python -m training.worker 1
-TIMEOUT 60
+TIMEOUT 30
 start python -m training.worker 2
-TIMEOUT 60
+TIMEOUT 30
 start python -m training.worker 3
-TIMEOUT 60
+TIMEOUT 30
 start python -m training.worker 3
 TIMEOUT 180
 nircmd win min process "RocketLeague.exe"

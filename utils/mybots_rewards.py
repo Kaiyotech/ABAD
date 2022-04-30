@@ -19,17 +19,25 @@ class AerialGoalReward(RewardFunction):
 
     def __init__(self):
         self.last_touch_height = 0
-        self.last_goal = 0
+        self.initial_state = None
+        self.last_goal = None
 
     def reset(self, initial_state: GameState):
         self.last_touch_height = 0
-        self.last_goal = initial_state.blue_score
+        self.initial_state = initial_state
 
     def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        if player.team_num == BLUE_TEAM:
+            self.last_goal = self.initial_state.blue_score
+            now_score = state.blue_score
+        else:
+            self.last_goal = self.initial_state.orange_score
+            now_score = state.orange_score
+
         if state.last_touch == player.car_id:
             self.last_touch_height = player.car_data.position[2]
 
-        if self.last_touch_height > GOAL_HEIGHT and state.blue_score > self.last_goal:
+        if self.last_touch_height > GOAL_HEIGHT and now_score > self.last_goal:
             return 1
 
         else:
