@@ -26,7 +26,7 @@ from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 
 
 if __name__ == "__main__":
-    ctypes.windll.kernel32.SetConsoleTitleW("RLearnWorkerABAD")
+    # ctypes.windll.kernel32.SetConsoleTitleW("RLearnWorkerABAD")
     torch.set_num_threads(1)
     streamer_mode = False
     game_speed = 100
@@ -115,12 +115,12 @@ if __name__ == "__main__":
             behind_ball_w=0,
             save_boost_w=0,
             concede_w=-5,
-            velocity_w=0.01,
-            velocity_pb_w=0.15,
-            velocity_bg_w=0.25,
+            velocity_w=0.00,
+            velocity_pb_w=0.25,
+            velocity_bg_w=0.5,
             aerial_ball_touch_w=10,
             kickoff_w=0.25,
-            ball_touch_w=0.05,
+            ball_touch_w=0.035,
             touch_grass_w=-0.005,
         )
     )
