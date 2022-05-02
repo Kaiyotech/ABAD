@@ -22,7 +22,7 @@ def get_actor(_split, _state_dim):
 split = (90,)
 
 # TOTAL SIZE OF THE INPUT DATA
-state_dim = 231 + (8*5)
+state_dim = 231
 
 actor = get_actor(split, state_dim)
 

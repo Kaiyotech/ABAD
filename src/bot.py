@@ -4,7 +4,7 @@ from rlbot.agents.base_agent import BaseAgent, SimpleControllerState
 from rlbot.utils.structures.game_data_struct import GameTickPacket
 from rlgym_compat import GameState
 
-from mybots_obs import ExpandAdvancedPaddedStackObs
+from mybots_obs import ExpandAdvancedPaddedObs
 from nectoparser import NectoAction
 
 from agent import Agent
@@ -28,7 +28,7 @@ class Coyote(BaseAgent):
     def initialize_agent(self):
         # Initialize the rlgym GameState object now that the game is active and the info is available
         field_info = self.get_field_info()
-        self.obs_builder = ExpandAdvancedPaddedStackObs(stack_size=5, team_size=3)
+        self.obs_builder = ExpandAdvancedPaddedObs()
         self.game_state = GameState(field_info)
         self.ticks = self.tick_skip  # So we take an action the first tick
         self.prev_time = 0
