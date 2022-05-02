@@ -86,15 +86,15 @@ if __name__ == "__main__":
                         ),
                         ),
                         (
-                        0.0,  # groundair
-                        0.0,  # wallair
-                        0.45,  # kickofflike ground
-                        0.05,  # kickofflike air
-                        0.0,  # wall
+                        0.05,  # groundair
+                        0.05,  # wallair
+                        0.35,  # kickofflike ground
+                        0.1,  # kickofflike air
+                        0.05,  # wall
                         # 0.10,  # goalie
-                        0.05,  # hoops
-                        0.25,  # default kickoff
-                        0.20,  # ball front goal
+                        0.10,  # hoops
+                        0.3,  # default kickoff
+                        0,  # ball front goal
                         ),
                     ),
         obs_builder=ExpandAdvancedPaddedObs(),
@@ -108,7 +108,7 @@ if __name__ == "__main__":
             aerial_goal_w=5,
             double_tap_goal_w=0,
             shot_w=1.5,
-            save_w=1.5,
+            save_w=2.5,
             demo_w=1.5,
             above_w=0,
             got_demoed_w=-1.5,
@@ -116,12 +116,12 @@ if __name__ == "__main__":
             save_boost_w=0,
             concede_w=-5,
             velocity_w=0.00,
-            velocity_pb_w=0.25,
-            velocity_bg_w=0.5,
+            velocity_pb_w=0.3,
+            velocity_bg_w=0.75,
             aerial_ball_touch_w=10,
             kickoff_w=0.25,
-            ball_touch_w=0.035,
-            touch_grass_w=-0.005,
+            ball_touch_w=0.00,
+            touch_grass_w=-0.001,
         )
     )
 
@@ -133,4 +133,5 @@ if __name__ == "__main__":
                        streamer_mode=streamer_mode,
                        send_gamestates=False,
                        evaluation_prob=0.01,
+                       sigma_target=2,
                        ).run()
