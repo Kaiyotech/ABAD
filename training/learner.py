@@ -25,7 +25,7 @@ if __name__ == "__main__":
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
         learning_rate_critic=1e-4,
-        learning_rate_actor=0,  # 1e-4, new rewards, trying to freeze
+        learning_rate_actor=1e-4,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=2_000_000,  # testing 2M normal
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1651498106.4166818/Coyote_525/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1651524541.478956/Coyote_555/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
