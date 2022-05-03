@@ -142,9 +142,9 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1651524541.478956/Coyote_555/checkpoint.pt")
-    alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
-    alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
+    alg.load("checkpoint_save_directory/Coyote_1651542769.9029453/Coyote_615/checkpoint.pt")
+    # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
+    # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
