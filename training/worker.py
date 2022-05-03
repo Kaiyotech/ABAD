@@ -31,12 +31,23 @@ if __name__ == "__main__":
     streamer_mode = False
     game_speed = 100
     team_size = 1
+    host = 127.0.0.1
+    past_version_prob = 0.2
+    evaluation_prob = 0.01
+    name = "Default"
     if len(sys.argv) > 1:
         team_size = int(sys.argv[1])
     if len(sys.argv) > 2:
-        if sys.argv[2] == 'STREAMER':
+        host = sys.argv[2]
+    if len(sys.argv) > 3:
+        name = sys.argv[3]
+    if len(sys.argv) > 4:
+        if sys.argv[4] == 'STREAMER':
             streamer_mode = True
+            past_version_prob = 0
+            evaluation_prob = 0
             game_speed = 1
+    name = name+"-"+team_size+"s"
     match = Match(
         game_speed=game_speed,
         self_play=True,
@@ -125,13 +136,13 @@ if __name__ == "__main__":
         )
     )
 
-    r = Redis(host="127.0.0.1", username="user1", password=os.environ["redis_user1_key"])
+    r = Redis(host=host, username="user1", password=os.environ["redis_user1_key"])
     RedisRolloutWorker(r,
-                       "Kaiyotech",
+                       name,
                        match,
-                       past_version_prob=0.2,
+                       past_version_prob=past_version_prob,
                        streamer_mode=streamer_mode,
                        send_gamestates=False,
-                       evaluation_prob=0.01,
+                       evaluation_prob=evaluation_prob,
                        sigma_target=2,
                        ).run()
