@@ -31,7 +31,7 @@ if __name__ == "__main__":
     streamer_mode = False
     game_speed = 100
     team_size = 1
-    host = 127.0.0.1
+    host = "127.0.0.1"
     past_version_prob = 0.2
     evaluation_prob = 0.01
     name = "Default"
@@ -47,7 +47,7 @@ if __name__ == "__main__":
             past_version_prob = 0
             evaluation_prob = 0
             game_speed = 1
-    name = name+"-"+team_size+"s"
+    name = name+"-"+str(team_size)+"s"
     match = Match(
         game_speed=game_speed,
         self_play=True,
@@ -127,8 +127,8 @@ if __name__ == "__main__":
             save_boost_w=0,
             concede_w=-5,
             velocity_w=0.00,
-            velocity_pb_w=0.005,
-            velocity_bg_w=0.05,
+            velocity_pb_w=0.01,
+            velocity_bg_w=0.075,
             aerial_ball_touch_w=10,
             kickoff_w=0.25,
             ball_touch_w=0.00,

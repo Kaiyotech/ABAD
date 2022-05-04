@@ -66,8 +66,8 @@ if __name__ == "__main__":
             save_boost_w=0,
             concede_w=-5,
             velocity_w=0.00,
-            velocity_pb_w=0.005,
-            velocity_bg_w=0.05,
+            velocity_pb_w=0.01,
+            velocity_bg_w=0.075,
             aerial_ball_touch_w=10,
             kickoff_w=0.25,
             ball_touch_w=0.00,
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1651542769.9029453/Coyote_615/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1651636370.545624/Coyote_720/checkpoint.pt")
     # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

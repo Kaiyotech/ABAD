@@ -2,22 +2,22 @@ REM verify redis is running already (user1@MSI:/$ sudo redis-server /etc/redis/r
 call ..\venv\Scripts\activate.bat
 copy /b/v/y "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings_bots.ini" "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings.ini"
 cd ..
-start python -m training.learner
+REM start python -m training.learner
 TIMEOUT 10
 REM start python worker.py STREAMER
 :loop
 REM FOR /L %%G IN (1,1,5) DO (start python -m training.worker & TIMEOUT 60)
-start python -m training.worker 1
+start python -m training.worker 1 127.0.0.1 MSI
 pause
-start python -m training.worker 1
+start python -m training.worker 1 127.0.0.1 MSI
 TIMEOUT 30
-start python -m training.worker 1
+start python -m training.worker 1 127.0.0.1 MSI
 TIMEOUT 30
-start python -m training.worker 1
+start python -m training.worker 1 127.0.0.1 MSI
 TIMEOUT 30
-start python -m training.worker 3
+start python -m training.worker 1 127.0.0.1 MSI
 TIMEOUT 30
-start python -m training.worker 3
+start python -m training.worker 1 127.0.0.1 MSI
 TIMEOUT 180
 nircmd win min process "RocketLeague.exe"
 REM TIMEOUT 10800
