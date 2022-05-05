@@ -45,7 +45,7 @@ if __name__ == "__main__":
                         config=config,
                         )
 
-    redis = Redis(username="user1", password=os.environ["redis_user1_key"])
+    redis = Redis(username="user1", password=os.environ["redis_user1_key"])  # host="192.168.0.201",
 
     # ENSURE OBSERVATION, REWARD, AND ACTION CHOICES ARE THE SAME IN THE WORKER
     def obs():
