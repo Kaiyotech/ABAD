@@ -32,8 +32,8 @@ if __name__ == "__main__":
     game_speed = 100
     team_size = 1
     host = "127.0.0.1"
-    past_version_prob = 0.2
-    evaluation_prob = 0.01
+    past_version_prob = 0  # 0.2
+    evaluation_prob = 0  # 0.01
     name = "Default"
     if len(sys.argv) > 1:
         team_size = int(sys.argv[1])
@@ -128,7 +128,7 @@ if __name__ == "__main__":
             concede_w=-5,
             velocity_w=0.0125,
             velocity_pb_w=0.025,
-            velocity_bg_w=0.15,
+            velocity_bg_w=0.25,
             aerial_ball_touch_w=10,
             kickoff_w=0.25,
             ball_touch_w=0.00,
