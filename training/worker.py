@@ -135,7 +135,7 @@ if __name__ == "__main__":
             kickoff_w=0,
             ball_touch_w=0.00,
             touch_grass_w=0,
-            ceiling_touch_w=-2,
+            ceiling_touch_w=-0.1,
         )
     )
 

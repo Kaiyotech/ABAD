@@ -35,7 +35,7 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=5,
     )
-    run_id = "Run1"
+    run_id = "Runv5_1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="ABADv5",
