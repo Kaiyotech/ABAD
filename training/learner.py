@@ -7,7 +7,7 @@ from torch.nn import Linear, Sequential, ReLU
 from redis import Redis
 
 from training.rewards import anneal_rewards_fn, MyRewardFunction
-from utils.nectoparser import NectoAction
+from utils.mybots_parser import DribbleAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
 from training.agent import DiscretePolicy
@@ -35,11 +35,11 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=5,
     )
-    run_id = "Run432"
+    run_id = "Run1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
-                        name="CoyoteV3",
-                        project="Coyote",
+                        name="ABADv5",
+                        project="ABAD",
                         entity="kaiyotech",
                         id=run_id,
                         config=config,
@@ -54,9 +54,9 @@ if __name__ == "__main__":
     def rew():
         return MyRewardFunction(
             team_spirit=0,
-            goal_w=5,
-            aerial_goal_w=2,
-            double_tap_goal_w=0,
+            goal_w=0,
+            aerial_goal_w=5,
+            double_tap_goal_w=5,
             shot_w=0.5,
             save_w=2,
             demo_w=1,
@@ -64,18 +64,19 @@ if __name__ == "__main__":
             got_demoed_w=-1,
             behind_ball_w=0,
             save_boost_w=0,
-            concede_w=-5,
-            velocity_w=0.0125,
-            velocity_pb_w=0.025,
-            velocity_bg_w=0.25,
-            aerial_ball_touch_w=10,
-            kickoff_w=0.25,
+            concede_w=-6.5,
+            velocity_w=0.001,
+            velocity_pb_w=0.001,
+            velocity_bg_w=0.5,
+            aerial_ball_touch_w=3,
+            kickoff_w=0,
             ball_touch_w=0.00,
-            touch_grass_w=-0.001,
+            touch_grass_w=0,
+            ceiling_touch_w=-2,
         )
 
     def act():
-        return NectoAction()  # KBMAction(n_bins=N_BINS)
+        return DribbleAction()  # KBMAction(n_bins=N_BINS)
 
     # THE ROLLOUT GENERATOR CAPTURES INCOMING DATA THROUGH REDIS AND PASSES IT TO THE LEARNER.
     # -save_every SPECIFIES HOW OFTEN OLD VERSIONS ARE SAVED TO REDIS. THESE ARE USED FOR TRUESKILL
@@ -83,13 +84,13 @@ if __name__ == "__main__":
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        clear=False,  # update this if starting over
+                                        clear=True,  # update this if starting over
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
     # THE ACTIONS THEMSELVES. SEE network_setup.readme.txt FOR MORE INFORMATION
     # split = (3, 3, 3, 3, 3,  2, 2, 2)
-    split = (90,)  # updated for Necto parser
+    split = (86,)  # updated for Necto parser
     total_output = sum(split)
 
     # TOTAL SIZE OF THE INPUT DATA
@@ -142,7 +143,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1651729556.420617/Coyote_805/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/Coyote_1651729556.420617/Coyote_805/checkpoint.pt")
     # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

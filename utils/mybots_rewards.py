@@ -216,3 +216,14 @@ class TouchGrass(RewardFunction):
             return 1
         else:
             return 0
+
+
+class BallCloseCeilingReward(RewardFunction):
+    def reset(self, initial_state: GameState):
+        pass
+
+    def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        if state.ball.position[2] < (2 * BALL_RADIUS):
+            return 1
+        else:
+            return 0
