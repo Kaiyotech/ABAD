@@ -75,6 +75,7 @@ class MyRewardFunction(CombinedReward):
             ball_touch_w=0.25,
             kickoff_w=0.5,
             touch_grass_w=-0.001,
+            ceiling_touch_w=-0.5,
     ):
         self.team_spirit = team_spirit
         self.goal_w = goal_w
@@ -95,6 +96,7 @@ class MyRewardFunction(CombinedReward):
         self.ball_touch_w = ball_touch_w
         self.kickoff_w = kickoff_w
         self.touch_grass_w = touch_grass_w
+        self.ceiling_touch_w = ceiling_touch_w
         # self.rewards = None
         goal_reward = EventReward(goal=self.goal_w, concede=self.concede_w)
         distrib_reward = DistributeRewards(goal_reward, team_spirit=self.team_spirit)
@@ -113,11 +115,12 @@ class MyRewardFunction(CombinedReward):
                     demo=self.demo_w,
                     touch=self.ball_touch_w,
                 ),
-                AerialRewardPerTouch(exp_base=1.75, max_touches_reward=50),
+                AerialRewardPerTouch(exp_base=1.6, max_touches_reward=20),
                 AerialGoalReward(),
                 DoubleTapReward(),
                 KickoffReward(),
                 TouchGrass(),
+                BallCloseCeilingReward(),
             ),
             reward_weights=(
                 1.0,
@@ -133,6 +136,7 @@ class MyRewardFunction(CombinedReward):
                 self.double_tap_goal_w,
                 self.kickoff_w,
                 self.touch_grass_w,
+                self.ceiling_touch_w,
             )
         )
 

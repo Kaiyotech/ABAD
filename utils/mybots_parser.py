@@ -7,7 +7,7 @@ from rlgym.utils.action_parsers import ActionParser
 from rlgym.utils.gamestates import GameState
 
 
-class NectoAction(ActionParser):
+class DribbleAction(ActionParser):
     def __init__(self):
         super().__init__()
         self._lookup_table = self.make_lookup_table()
@@ -33,10 +33,13 @@ class NectoAction(ActionParser):
                                 continue
                             if pitch == roll == jump == 0:  # Duplicate with ground
                                 continue
-                            # Enable handbrake for potential wavedashes
-                            handbrake = jump == 1 and (pitch != 0 or yaw != 0 or roll != 0)
+                            if jump == 1 and pitch == -1 and (yaw != 0 or roll != 0):
+                                # remove backflips except directly back
+                                continue
+                            handbrake = 0
                             actions.append([boost, yaw, pitch, yaw, roll, jump, boost, handbrake])
         actions = np.array(actions)
+        actions = np.unique(actions, axis=0)
         # actions = np.array([0, 0, 1, 0, 0, 1, 0, 0])
         # print(actions)
         return actions
@@ -68,5 +71,6 @@ class NectoAction(ActionParser):
 
 
 if __name__ == '__main__':
-    ap = NectoAction()
+    ap = DribbleAction()
+    print(ap.make_lookup_table())
     print(ap.get_action_space())

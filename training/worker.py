@@ -7,6 +7,7 @@ from redis import Redis
 
 from rlgym.envs import Match
 from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition
+from utils.mybots_terminals import BallTouchGroundCondition
 from utils.mybots_statesets import WallDribble, GroundAirDribble, BallFrontGoalState
 from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
 from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
@@ -16,7 +17,7 @@ from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
 from rlgym.utils.state_setters.default_state import DefaultState
 from utils.mybots_obs import ExpandAdvancedPaddedObs
 
-from utils.nectoparser import NectoAction
+from utils.mybots_parser import DribbleAction
 
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 
@@ -97,27 +98,28 @@ if __name__ == "__main__":
                         ),
                         ),
                         (
-                        0.05,  # groundair
-                        0.05,  # wallair
-                        0.35,  # kickofflike ground
-                        0.1,  # kickofflike air
-                        0.05,  # wall
+                        0.50,  # groundair
+                        0.50,  # wallair
+                        0,  # kickofflike ground
+                        0,  # kickofflike air
+                        0,  # wall
                         # 0.10,  # goalie
-                        0.10,  # hoops
-                        0.3,  # default kickoff
+                        0,  # hoops
+                        0,  # default kickoff
                         0,  # ball front goal
                         ),
                     ),
         obs_builder=ExpandAdvancedPaddedObs(),
-        action_parser=NectoAction(),
+        action_parser=DribbleAction(),
         terminal_conditions=[TimeoutCondition(round(300 // T_STEP)),
                              GoalScoredCondition(),
+                             BallTouchGroundCondition(),
                              ],
         reward_function=MyRewardFunction(
             team_spirit=0,
-            goal_w=5,
-            aerial_goal_w=2,
-            double_tap_goal_w=0,
+            goal_w=0,
+            aerial_goal_w=5,
+            double_tap_goal_w=5,
             shot_w=0.5,
             save_w=2,
             demo_w=1,
@@ -125,14 +127,15 @@ if __name__ == "__main__":
             got_demoed_w=-1,
             behind_ball_w=0,
             save_boost_w=0,
-            concede_w=-5,
-            velocity_w=0.0125,
-            velocity_pb_w=0.025,
-            velocity_bg_w=0.25,
-            aerial_ball_touch_w=10,
-            kickoff_w=0.25,
+            concede_w=-6.5,
+            velocity_w=0.001,
+            velocity_pb_w=0.001,
+            velocity_bg_w=0.75,
+            aerial_ball_touch_w=1,
+            kickoff_w=0,
             ball_touch_w=0.00,
-            touch_grass_w=-0.001,
+            touch_grass_w=0,
+            ceiling_touch_w=-2,
         )
     )
 
