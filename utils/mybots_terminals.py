@@ -8,7 +8,7 @@ class BallTouchGroundCondition(TerminalCondition):
     A condition that will terminate an episode after ball touches ground
     """
 
-    def __init__(self, min_steps=50):
+    def __init__(self, min_steps=30):
         super().__init__()
         self.min_steps = min_steps
         self.steps = 0
