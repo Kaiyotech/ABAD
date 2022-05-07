@@ -139,7 +139,13 @@ if __name__ == "__main__":
         )
     )
 
-    r = Redis(host=host, username="user1", password=os.environ["redis_user1_key"])
+    r = Redis(host=host,
+              username="user1",
+              password=os.environ["redis_user1_key"],
+              health_check_interval=30,
+              retry_on_timeout=True,
+              socket_keepalive=True,
+              )
     RedisRolloutWorker(r,
                        name,
                        match,
