@@ -145,6 +145,8 @@ if __name__ == "__main__":
               health_check_interval=30,
               retry_on_timeout=True,
               socket_keepalive=True,
+              socket_timeout=120,
+              socket_connect_timeout=30,
               )
     RedisRolloutWorker(r,
                        name,
