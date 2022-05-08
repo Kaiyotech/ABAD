@@ -57,7 +57,7 @@ if __name__ == "__main__":
             goal_w=0,
             aerial_goal_w=5,
             double_tap_goal_w=5,
-            shot_w=0.5,
+            shot_w=1,
             save_w=2,
             demo_w=1,
             above_w=0,
@@ -65,14 +65,14 @@ if __name__ == "__main__":
             behind_ball_w=0,
             save_boost_w=0,
             concede_w=-6.5,
-            velocity_w=0.001,
-            velocity_pb_w=0.001,
-            velocity_bg_w=0.75,
+            velocity_w=0,
+            velocity_pb_w=0,
+            velocity_bg_w=0.2,
             aerial_ball_touch_w=1,
             kickoff_w=0,
-            ball_touch_w=0.00,
+            ball_touch_w=0,
             touch_grass_w=0,
-            ceiling_touch_w=-2,
+            ceiling_touch_w=-1,
         )
 
     def act():
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/ABAD_1651815016.5574393/ABAD_165/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/ABAD_1651815016.5574393/ABAD_165/checkpoint.pt")
     # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

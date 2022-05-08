@@ -53,62 +53,12 @@ if __name__ == "__main__":
         game_speed=game_speed,
         self_play=True,
         team_size=team_size,
-        state_setter=WeightedSampleSetter((
-                        AugmentSetter(
-                            GroundAirDribble(),
-                            shuffle_within_teams=True,
-                            swap_front_back=False,
-                            swap_left_right=False,
-                            ),
-                        AugmentSetter(
-                            WallDribble(),
-                            shuffle_within_teams=True,
-                            swap_front_back=False,
-                            swap_left_right=False,
-                            ),
-                        AugmentSetter(
-                            KickoffLikeSetter(
-                                cars_on_ground=True,
-                                ball_on_ground=True,
-                                )
-                            ),
-                        AugmentSetter(
-                            KickoffLikeSetter(
-                                cars_on_ground=False,
-                                ball_on_ground=False,
-                            )
+        state_setter=AugmentSetter(
+                        WallDribble(),
+                        shuffle_within_teams=True,
+                        swap_front_back=False,
+                        swap_left_right=False,
                         ),
-                        AugmentSetter(
-                            WallPracticeState()
-                            ),
-                        # AugmentSetter(  # TODO don't use this unti you don't allow random goals
-                        #     GoaliePracticeState(
-                        #         allow_enemy_interference=True,
-                        #         aerial_only=False,
-                        #         first_defender_in_goal=True,
-                        #         reset_to_max_boost=False,
-                        #         )
-                        #     ),
-                        AugmentSetter(
-                            HoopsLikeSetter()
-                        ),
-                        DefaultState(),  # this is kickoff normal
-                        AugmentSetter(
-                            BallFrontGoalState(),
-                        ),
-                        ),
-                        (
-                        0.50,  # groundair
-                        0.50,  # wallair
-                        0,  # kickofflike ground
-                        0,  # kickofflike air
-                        0,  # wall
-                        # 0.10,  # goalie
-                        0,  # hoops
-                        0,  # default kickoff
-                        0,  # ball front goal
-                        ),
-                    ),
         obs_builder=ExpandAdvancedPaddedObs(),
         action_parser=DribbleAction(),
         terminal_conditions=[TimeoutCondition(round(300 // T_STEP)),
@@ -120,7 +70,7 @@ if __name__ == "__main__":
             goal_w=0,
             aerial_goal_w=5,
             double_tap_goal_w=5,
-            shot_w=0.5,
+            shot_w=1,
             save_w=2,
             demo_w=1,
             above_w=0,
@@ -128,14 +78,14 @@ if __name__ == "__main__":
             behind_ball_w=0,
             save_boost_w=0,
             concede_w=-6.5,
-            velocity_w=0.001,
-            velocity_pb_w=0.001,
-            velocity_bg_w=0.75,
+            velocity_w=0,
+            velocity_pb_w=0,
+            velocity_bg_w=0.2,
             aerial_ball_touch_w=1,
             kickoff_w=0,
-            ball_touch_w=0.00,
+            ball_touch_w=0,
             touch_grass_w=0,
-            ceiling_touch_w=-0.1,
+            ceiling_touch_w=-1,
         )
     )
 
