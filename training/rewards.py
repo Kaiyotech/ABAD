@@ -1,6 +1,7 @@
 from utils.mybots_rewards import *
 from rlgym_tools.extra_rewards.anneal_rewards import AnnealRewards
 from rlgym_tools.extra_rewards.kickoff_reward import KickoffReward
+from rlgym.utils.reward_functions.common_rewards.player_ball_rewards import LiuDistancePlayerToBallReward
 
 
 def anneal_rewards_fn():
@@ -76,6 +77,7 @@ class MyRewardFunction(CombinedReward):
             kickoff_w=0.5,
             touch_grass_w=-0.001,
             ceiling_touch_w=-0.5,
+            dist_ball_w=1,
     ):
         self.team_spirit = team_spirit
         self.goal_w = goal_w
@@ -97,6 +99,7 @@ class MyRewardFunction(CombinedReward):
         self.kickoff_w = kickoff_w
         self.touch_grass_w = touch_grass_w
         self.ceiling_touch_w = ceiling_touch_w
+        self.dist_ball_w = dist_ball_w
         # self.rewards = None
         goal_reward = EventReward(goal=self.goal_w, concede=self.concede_w)
         distrib_reward = DistributeRewards(goal_reward, team_spirit=self.team_spirit)
@@ -121,6 +124,7 @@ class MyRewardFunction(CombinedReward):
                 KickoffReward(),
                 TouchGrass(),
                 BallCloseCeilingReward(),
+                LiuDistancePlayerToBallReward(),
             ),
             reward_weights=(
                 1.0,
@@ -137,6 +141,7 @@ class MyRewardFunction(CombinedReward):
                 self.kickoff_w,
                 self.touch_grass_w,
                 self.ceiling_touch_w,
+                self.dist_ball_w,
             )
         )
 
