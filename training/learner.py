@@ -25,7 +25,7 @@ if __name__ == "__main__":
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
         learning_rate_critic=1e-4,
-        learning_rate_actor=0,  # 1e-4,
+        learning_rate_actor=1e-4,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=1_000_000,  # testing 2M normal
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         return MyRewardFunction(
             team_spirit=0,
             goal_w=0,
-            aerial_goal_w=5,
+            aerial_goal_w=8,
             double_tap_goal_w=5,
             shot_w=1,
             save_w=2,
@@ -67,13 +67,15 @@ if __name__ == "__main__":
             concede_w=-6.5,
             velocity_w=0,
             velocity_pb_w=0,
-            velocity_bg_w=0.5,
-            aerial_ball_touch_w=5,
+            velocity_bg_w=0.025,
+            aerial_ball_touch_w=0.5,
             kickoff_w=0,
             ball_touch_w=0,
             touch_grass_w=0,
-            ceiling_touch_w=-3,
-            dist_ball_w=1,
+            ceiling_touch_w=0,
+            dist_ball_w=0,
+            height_w=0.1,
+            final_w=-3,
         )
 
     def act():
@@ -144,7 +146,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/ABAD_1652156897.063854/ABAD_705/checkpoint.pt")
+    alg.load("checkpoint_save_directory/ABAD_1652243503.8942757/ABAD_805/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
