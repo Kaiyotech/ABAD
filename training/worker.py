@@ -68,7 +68,7 @@ if __name__ == "__main__":
         reward_function=MyRewardFunction(
             team_spirit=0,
             goal_w=0,
-            aerial_goal_w=5,
+            aerial_goal_w=8,
             double_tap_goal_w=5,
             shot_w=1,
             save_w=2,
@@ -80,13 +80,15 @@ if __name__ == "__main__":
             concede_w=-6.5,
             velocity_w=0,
             velocity_pb_w=0,
-            velocity_bg_w=0.5,
-            aerial_ball_touch_w=5,
+            velocity_bg_w=0.025,
+            aerial_ball_touch_w=0.5,
             kickoff_w=0,
             ball_touch_w=0,
             touch_grass_w=0,
-            ceiling_touch_w=-3,
-            dist_ball_w=1,
+            ceiling_touch_w=0,
+            dist_ball_w=0,
+            height_w=0.1,
+            final_w=-3,
         )
     )
 

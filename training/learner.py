@@ -25,11 +25,11 @@ if __name__ == "__main__":
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
         learning_rate_critic=1e-4,
-        learning_rate_actor=1e-4,
+        learning_rate_actor=0,  # 1e-4,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=2_000_000,  # testing 2M normal
-        batch_size=400_000,  # testing 200k normal
+        target_steps=1_000_000,  # testing 2M normal
+        batch_size=200_000,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
         n_epochs=30,
@@ -144,9 +144,9 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/ABAD_1651932493.051218/ABAD_550")
-    # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
-    # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
+    alg.load("checkpoint_save_directory/ABAD_1652156897.063854/ABAD_705/checkpoint.pt")
+    alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
+    alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")

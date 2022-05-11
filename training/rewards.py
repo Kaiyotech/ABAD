@@ -78,6 +78,8 @@ class MyRewardFunction(CombinedReward):
             touch_grass_w=-0.001,
             ceiling_touch_w=-0.5,
             dist_ball_w=1,
+            height_w=1,
+            final_w=-5,
     ):
         self.team_spirit = team_spirit
         self.goal_w = goal_w
@@ -100,6 +102,8 @@ class MyRewardFunction(CombinedReward):
         self.touch_grass_w = touch_grass_w
         self.ceiling_touch_w = ceiling_touch_w
         self.dist_ball_w = dist_ball_w
+        self.height_w = height_w
+        self.final_w = final_w
         # self.rewards = None
         goal_reward = EventReward(goal=self.goal_w, concede=self.concede_w)
         distrib_reward = DistributeRewards(goal_reward, team_spirit=self.team_spirit)
@@ -118,13 +122,15 @@ class MyRewardFunction(CombinedReward):
                     demo=self.demo_w,
                     touch=self.ball_touch_w,
                 ),
-                AerialRewardPerTouch(exp_base=1.6, max_touches_reward=20),
+                AerialRewardPerTouch(exp_base=1.5, max_touches_reward=20),
                 AerialGoalReward(),
                 DoubleTapReward(),
                 KickoffReward(),
                 TouchGrass(),
                 BallCloseCeilingReward(),
                 LiuDistancePlayerToBallReward(),
+                HeightReward(),
+                FinalReward(),
             ),
             reward_weights=(
                 1.0,
@@ -142,6 +148,8 @@ class MyRewardFunction(CombinedReward):
                 self.touch_grass_w,
                 self.ceiling_touch_w,
                 self.dist_ball_w,
+                self.height_w,
+                self.final_w,
             )
         )
 
@@ -201,7 +209,7 @@ class MyOldRewardFunction(CombinedReward):
                     save=self.save_w,
                     demo=self.demo_w,
                 ),
-                AerialRewardPerTouch(exp_base=2, max_touches_reward=20),
+                AerialRewardPerTouch(exp_base=1.5, max_touches_reward=20),
                 AerialGoalReward(),
                 DoubleTapReward(),
                 KickoffReward()

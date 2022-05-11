@@ -2,7 +2,7 @@ import numpy as np
 
 from rlgym.utils import math
 from rlgym.utils.common_values import BLUE_TEAM, BLUE_GOAL_BACK, ORANGE_GOAL_BACK, ORANGE_TEAM, BALL_MAX_SPEED, \
-    CAR_MAX_SPEED, BALL_RADIUS, GOAL_HEIGHT
+    CAR_MAX_SPEED, BALL_RADIUS, GOAL_HEIGHT, CEILING_Z
 from rlgym.utils.gamestates import GameState, PlayerData
 
 from rlgym.utils.math import cosine_similarity
@@ -225,5 +225,49 @@ class BallCloseCeilingReward(RewardFunction):
     def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
         if state.ball.position[2] < (2 * BALL_RADIUS):
             return 1
+        else:
+            return 0
+
+
+class HeightReward(RewardFunction):
+    def __init__(self):
+        super().__init__()
+
+    def reset(self, initial_state: GameState):
+        pass
+
+    def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        # ideal height is around 1500, make 1500 = 1 reward, CEILING_Z should be -1, floor should be 0
+        if state.last_touch == player.car_id:
+            z = state.ball.position[2]
+            reward = (-1.2254e-10 * z ** 3) - (1.07493e-6 * z ** 2) + (0.00222 * z)
+            return reward
+
+        else:
+            return 0
+
+
+class FinalReward(RewardFunction):
+    def __init__(self):
+        super().__init__()
+        self.offense = False
+        self.checked = False
+
+    def reset(self, initial_state: GameState):
+        self.offense = False
+        self.checked = False
+
+    def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        if not self.checked:
+            if state.last_touch == player.car_id:
+                self.offense = True
+                self.checked = True
+            elif state.last_touch != -1:
+                self.checked = True
+        return 0
+
+    def get_final_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        if self.checked and self.offense:
+            return -1
         else:
             return 0
