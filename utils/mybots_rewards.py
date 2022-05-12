@@ -240,7 +240,7 @@ class HeightReward(RewardFunction):
         # ideal height is around 1500, make 1500 = 1 reward, CEILING_Z should be -1, floor should be 0
         if state.last_touch == player.car_id:
             z = state.ball.position[2]
-            reward = (-1.2254e-10 * z ** 3) - (1.07493e-6 * z ** 2) + (0.00222 * z)
+            reward = (-4.454e-10 * z ** 3) - (0.37493e-6 * z ** 2) + (0.00212 * z)
             return reward
 
         else:

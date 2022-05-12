@@ -55,10 +55,10 @@ if __name__ == "__main__":
         return MyRewardFunction(
             team_spirit=0,
             goal_w=0,
-            aerial_goal_w=8,
+            aerial_goal_w=10,
             double_tap_goal_w=5,
-            shot_w=1,
-            save_w=2,
+            shot_w=0,
+            save_w=0,
             demo_w=1,
             above_w=0,
             got_demoed_w=-1,
@@ -68,13 +68,13 @@ if __name__ == "__main__":
             velocity_w=0,
             velocity_pb_w=0,
             velocity_bg_w=0.025,
-            aerial_ball_touch_w=0.5,
+            aerial_ball_touch_w=1.5,
             kickoff_w=0,
             ball_touch_w=0,
             touch_grass_w=0,
             ceiling_touch_w=0,
             dist_ball_w=0,
-            height_w=0.1,
+            height_w=0.5,
             final_w=-3,
         )
 
@@ -146,9 +146,9 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/ABAD_1652243503.8942757/ABAD_805/checkpoint.pt")
-    alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
-    alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
+    alg.load("checkpoint_save_directory/ABAD_1652269389.8923283/ABAD_1025/checkpoint.pt")
+    # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
+    # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
