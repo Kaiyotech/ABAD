@@ -271,3 +271,22 @@ class FinalReward(RewardFunction):
             return -1
         else:
             return 0
+
+class EagleReward(RewardFunction):
+    def __init__(self):
+        super().__init__()
+
+    def reset(self, initial_state: GameState):
+        pass
+
+    def get_reward(
+        self, player: PlayerData, state: GameState, previous_action: np.ndarray
+    ) -> float:
+        reward = state.ball.position[2] / 2000
+        reward -= np.sqrt(state.ball.position[0] ** 2 + state.ball.position[1] ** 2) / 2000
+        return reward
+
+    def get_final_reward(
+        self, player: PlayerData, state: GameState, previous_action: np.ndarray
+    ) -> float:
+        return -5
