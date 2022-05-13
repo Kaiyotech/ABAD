@@ -6,6 +6,7 @@ from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 import numpy as np
 from numpy import random as rand
 import math
+import random
 
 DEG_TO_RAD = 3.14159265 / 180
 
@@ -159,3 +160,38 @@ class WallDribble(StateSetter):
                 car.set_pos(rng.uniform(-1472, 1472), rng.uniform(-1984, 1984), 0)
                 car.set_rot(0, rng.uniform(-180, 180) * (np.pi / 180), 0)
                 car.boost = 0.33
+
+
+class EagleState(StateSetter):
+    def reset(self, state_wrapper: StateWrapper):
+        car = state_wrapper.cars[0]
+        if len(state_wrapper.cars) > 1:
+            print(f"Found {len(state_wrapper.cars)} cars.")
+
+        state_wrapper.ball.set_pos(
+            x=0,
+            y=0,
+            z=1944 - random.random() * 5,
+        )
+        state_wrapper.ball.set_lin_vel(
+            x=random.uniform(-5, 5),
+            y=random.uniform(-5, 5),
+            z=random.uniform(-5, 5),
+        )
+        state_wrapper.ball.set_ang_vel(
+            x=random.uniform(-1, 1),
+            y=random.uniform(-1, 1),
+            z=random.uniform(-1, 1),
+        )
+
+        car.set_pos(
+            x=0,
+            y=0,
+            z=1750,
+        )
+        car.set_rot(
+            pitch=math.pi / 2 - random.random() * 0.1 * math.pi,
+            yaw=random.random() * 2 * math.pi,
+            roll=random.random() * 2 * math.pi,
+        )
+        car.boost = 100

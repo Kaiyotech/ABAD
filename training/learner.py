@@ -6,7 +6,7 @@ from torch.nn import Linear, Sequential, ReLU
 
 from redis import Redis
 
-from training.rewards import anneal_rewards_fn, MyRewardFunction
+from training.rewards import anneal_rewards_fn, MyRewardFunction, EagleReward
 from utils.mybots_parser import DribbleAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
@@ -14,7 +14,7 @@ from training.agent import DiscretePolicy
 from training.my_ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import SplitLayer
-from utils.mybots_obs import ExpandAdvancedPaddedObs
+from utils.mybots_obs import ExpandAdvancedObs
 
 from training.Constants import *
 from utils.misc import count_parameters
@@ -28,18 +28,18 @@ if __name__ == "__main__":
         learning_rate_actor=1e-4,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=1_000_000,  # testing 2M normal
-        batch_size=200_000,  # testing 200k normal
+        target_steps=10_000,  # testing 2M normal
+        batch_size=10_000,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
         n_epochs=30,
-        iterations_per_save=5,
+        iterations_per_save=100,
     )
-    run_id = "Runv5_1"
+    run_id = "Runv1_1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
-                        name="ABADv5",
-                        project="ABAD",
+                        name="Eagle1",
+                        project="Eagle",
                         entity="kaiyotech",
                         id=run_id,
                         config=config,
@@ -49,34 +49,10 @@ if __name__ == "__main__":
 
     # ENSURE OBSERVATION, REWARD, AND ACTION CHOICES ARE THE SAME IN THE WORKER
     def obs():
-        return ExpandAdvancedPaddedObs()
+        return ExpandAdvancedObs()
 
     def rew():
-        return MyRewardFunction(
-            team_spirit=0,
-            goal_w=0,
-            aerial_goal_w=10,
-            double_tap_goal_w=5,
-            shot_w=0,
-            save_w=0,
-            demo_w=1,
-            above_w=0,
-            got_demoed_w=-1,
-            behind_ball_w=0,
-            save_boost_w=0,
-            concede_w=-6.5,
-            velocity_w=0,
-            velocity_pb_w=0,
-            velocity_bg_w=0.025,
-            aerial_ball_touch_w=1.5,
-            kickoff_w=0,
-            ball_touch_w=0,
-            touch_grass_w=0,
-            ceiling_touch_w=0,
-            dist_ball_w=0,
-            height_w=0.5,
-            final_w=-3,
-        )
+        return EagleReward()
 
     def act():
         return DribbleAction()  # KBMAction(n_bins=N_BINS)
@@ -87,7 +63,7 @@ if __name__ == "__main__":
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        clear=False,  # update this if starting over
+                                        clear=True,  # update this if starting over
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
@@ -98,7 +74,7 @@ if __name__ == "__main__":
 
     # TOTAL SIZE OF THE INPUT DATA
     # 107+stack_size*actions
-    state_dim = 231  # + (8*5)    # normal is 107
+    state_dim = 76  # + (8*5)    # normal is 107  - 76 is no self 1
 
     critic = Sequential(
         Linear(state_dim, 256),
@@ -146,7 +122,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/ABAD_1652269389.8923283/ABAD_1025/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/ABAD_1652269389.8923283/ABAD_1025/checkpoint.pt")
     # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

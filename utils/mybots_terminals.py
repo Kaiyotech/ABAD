@@ -3,6 +3,16 @@ from rlgym.utils.gamestates import GameState
 from rlgym.utils.common_values import BALL_RADIUS
 
 
+class EagleTerminalCondition(TerminalCondition):
+    def reset(self, initial_state: GameState):
+        pass
+
+    def is_terminal(self, current_state: GameState) -> bool:
+        if current_state.ball.position[2] < 1000:
+            return True
+        return False
+
+
 class BallTouchGroundCondition(TerminalCondition):
     """
     A condition that will terminate an episode after ball touches ground

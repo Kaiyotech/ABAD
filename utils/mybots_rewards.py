@@ -272,6 +272,7 @@ class FinalReward(RewardFunction):
         else:
             return 0
 
+
 class EagleReward(RewardFunction):
     def __init__(self):
         super().__init__()
