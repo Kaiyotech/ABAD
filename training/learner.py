@@ -24,8 +24,8 @@ if __name__ == "__main__":
     config = dict(
         gamma=0.995,   # 1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=3e-4,
-        learning_rate_actor=3e-4,
+        learning_rate_critic=5e-3,
+        learning_rate_actor=5e-3,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=8192,  # testing 2M normal
