@@ -28,14 +28,14 @@ if __name__ == "__main__":
         learning_rate_actor=5e-3,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=8192,  # testing 2M normal
-        batch_size=256,  # testing 200k normal
+        target_steps=100_000,  # testing 2M normal
+        batch_size=10_000,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
         n_epochs=10,
-        iterations_per_save=100,
+        iterations_per_save=10,
     )
-    run_id = "Runv3_1"
+    run_id = "Runv5_1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="Eagle2",
