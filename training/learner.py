@@ -22,17 +22,17 @@ from utils.misc import count_parameters
 
 if __name__ == "__main__":
     config = dict(
-        gamma=1 - (T_STEP / TIME_HORIZON),
+        gamma=0.995,   # 1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=1e-4,
-        learning_rate_actor=1e-4,
+        learning_rate_critic=3e-4,
+        learning_rate_actor=3e-4,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=10_000,  # testing 2M normal
-        batch_size=10_000,  # testing 200k normal
+        target_steps=8192,  # testing 2M normal
+        batch_size=256,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
-        n_epochs=30,
+        n_epochs=10,
         iterations_per_save=100,
     )
     run_id = "Runv1_1"
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
     # THE ACTIONS THEMSELVES. SEE network_setup.readme.txt FOR MORE INFORMATION
     # split = (3, 3, 3, 3, 3,  2, 2, 2)
-    split = (86,)  # updated for Necto parser
+    split = (54,)  # updated for Necto parser
     total_output = sum(split)
 
     # TOTAL SIZE OF THE INPUT DATA
