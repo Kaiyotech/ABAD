@@ -35,10 +35,10 @@ if __name__ == "__main__":
         n_epochs=10,
         iterations_per_save=100,
     )
-    run_id = "Runv1_1"
+    run_id = "Runv3_1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
-                        name="Eagle1",
+                        name="Eagle2",
                         project="Eagle",
                         entity="kaiyotech",
                         id=run_id,

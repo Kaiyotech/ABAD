@@ -274,7 +274,7 @@ class PPO:
             # normalize before update
             step_rewards.extend(rewards)
             ep_raw_rewards.append(rewards.sum())
-            rewards = self._normalize_reward(rewards)
+            # rewards = self._normalize_reward(rewards)
             std_step_rewards.extend(rewards)
             ep_std_rewards.append(rewards.sum())
 
