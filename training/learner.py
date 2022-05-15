@@ -24,16 +24,16 @@ if __name__ == "__main__":
     config = dict(
         gamma=0.995,   # 1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=5e-3,
-        learning_rate_actor=5e-3,
+        learning_rate_critic=0.007,
+        learning_rate_actor=0.007,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=100_000,  # testing 2M normal
-        batch_size=10_000,  # testing 200k normal
+        target_steps=200_000,  # testing 2M normal
+        batch_size=20_000,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
-        n_epochs=10,
-        iterations_per_save=10,
+        n_epochs=20,
+        iterations_per_save=5,
     )
     run_id = "Runv5_1"
     wandb.login(key=os.environ["WANDB_KEY"])
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        clear=True,  # update this if starting over
+                                        clear=False,  # update this if starting over
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
@@ -122,9 +122,9 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    # alg.load("checkpoint_save_directory/ABAD_1652269389.8923283/ABAD_1025/checkpoint.pt")
-    # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
-    # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
+    alg.load("checkpoint_save_directory/Eagle_1652539274.18873/Eagle_1000/checkpoint.pt")
+    alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
+    alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")

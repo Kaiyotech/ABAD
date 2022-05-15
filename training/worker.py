@@ -6,7 +6,7 @@ import ctypes
 from redis import Redis
 
 from rlgym.envs import Match
-from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition
+from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition, NoTouchTimeoutCondition
 from utils.mybots_terminals import BallTouchGroundCondition, EagleTerminalCondition
 from utils.mybots_statesets import WallDribble, GroundAirDribble, BallFrontGoalState, EagleState
 from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         state_setter=EagleState(),
         obs_builder=ExpandAdvancedObs(),
         action_parser=DribbleAction(),
-        terminal_conditions=[EagleTerminalCondition()],
+        terminal_conditions=[EagleTerminalCondition(), NoTouchTimeoutCondition(8)],
         reward_function=EagleReward(),
     )
 
