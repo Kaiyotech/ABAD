@@ -56,7 +56,7 @@ if __name__ == "__main__":
         state_setter=EagleState(),
         obs_builder=ExpandAdvancedObs(),
         action_parser=DribbleAction(),
-        terminal_conditions=[EagleTerminalCondition(), NoTouchTimeoutCondition(8)],
+        terminal_conditions=[EagleTerminalCondition(), NoTouchTimeoutCondition(8), TimeoutCondition(1800)],
         reward_function=EagleReward(),
     )
 
