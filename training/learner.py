@@ -28,15 +28,15 @@ if __name__ == "__main__":
     config = dict(
         gamma=0.995,   # 1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=0.0005,
-        learning_rate_actor=0.0005,
+        learning_rate_critic=0.0002,
+        learning_rate_actor=0.0002,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=200_000,  # testing 2M normal
-        batch_size=20_000,  # testing 200k normal
+        target_steps=1_000_000,  # testing 2M normal
+        batch_size=200_000,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
-        n_epochs=20,
+        n_epochs=30,
         iterations_per_save=5,
     )
     run_id = "Runv1_1"
@@ -64,7 +64,7 @@ if __name__ == "__main__":
                         DoubleTapReward(),
                     ),
                     (
-                        1,
+                        0.1,
                         0.2,
                         1,
                         20,
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Eagle_1652579665.618073/Eagle_2985/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Dribble_Curriculum_1652757082.5542347/Dribble_Curriculum_3800/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
