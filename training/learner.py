@@ -15,6 +15,10 @@ from training.my_ppo import PPO
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import SplitLayer
 from utils.mybots_obs import ExpandAdvancedObs
+from rlgym.utils.reward_functions.combined_reward import CombinedReward
+from rlgym.utils.reward_functions.common_rewards.ball_goal_rewards import VelocityBallToGoalReward
+from rlgym.utils.reward_functions.common_rewards.misc_rewards import EventReward
+from utils.mybots_rewards import DoubleTapReward
 
 from training.Constants import *
 from utils.misc import count_parameters
@@ -24,8 +28,8 @@ if __name__ == "__main__":
     config = dict(
         gamma=0.995,   # 1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=0.007,
-        learning_rate_actor=0.007,
+        learning_rate_critic=0.0005,
+        learning_rate_actor=0.0005,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=200_000,  # testing 2M normal
@@ -35,11 +39,11 @@ if __name__ == "__main__":
         n_epochs=20,
         iterations_per_save=5,
     )
-    run_id = "Runv5_1"
+    run_id = "Runv1_1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
-                        name="Eagle2",
-                        project="Eagle",
+                        name="Air_Dribble_1",
+                        project="Dribble_Curriculum",
                         entity="kaiyotech",
                         id=run_id,
                         config=config,
@@ -52,7 +56,20 @@ if __name__ == "__main__":
         return ExpandAdvancedObs()
 
     def rew():
-        return EagleReward()
+        return CombinedReward(
+                    (
+                        EagleReward(),
+                        VelocityBallToGoalReward(),
+                        EventReward(goal=10),
+                        DoubleTapReward(),
+                    ),
+                    (
+                        1,
+                        0.2,
+                        1,
+                        20,
+                    ),
+        )
 
     def act():
         return DribbleAction()  # KBMAction(n_bins=N_BINS)
@@ -122,7 +139,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Eagle_1652539274.18873/Eagle_1000/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Eagle_1652579665.618073/Eagle_2985/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

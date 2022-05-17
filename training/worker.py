@@ -24,6 +24,10 @@ from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutW
 from training.Constants import *
 from training.rewards import anneal_rewards_fn, MyRewardFunction, EagleReward
 from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
+from rlgym.utils.reward_functions.combined_reward import CombinedReward
+from rlgym.utils.reward_functions.common_rewards.ball_goal_rewards import VelocityBallToGoalReward
+from rlgym.utils.reward_functions.common_rewards.misc_rewards import EventReward
+from utils.mybots_rewards import DoubleTapReward
 
 
 if __name__ == "__main__":
@@ -56,8 +60,21 @@ if __name__ == "__main__":
         state_setter=EagleState(),
         obs_builder=ExpandAdvancedObs(),
         action_parser=DribbleAction(),
-        terminal_conditions=[EagleTerminalCondition(), NoTouchTimeoutCondition(8), TimeoutCondition(1800)],
-        reward_function=EagleReward(),
+        terminal_conditions=[BallTouchGroundCondition(), GoalScoredCondition()],
+        reward_function=CombinedReward(
+                    (
+                        EagleReward(),
+                        VelocityBallToGoalReward(),
+                        EventReward(goal=10),
+                        DoubleTapReward(),
+                    ),
+                    (
+                        1,
+                        0.2,
+                        1,
+                        20,
+                    ),
+        )
     )
 
     r = Redis(host=host,
