@@ -37,7 +37,7 @@ if __name__ == "__main__":
         minibatch_size=None,
         n_bins=3,
         n_epochs=30,
-        iterations_per_save=5,
+        iterations_per_save=1,
     )
     run_id = "Runv1_1"
     wandb.login(key=os.environ["WANDB_KEY"])
@@ -64,8 +64,8 @@ if __name__ == "__main__":
                         DoubleTapReward(),
                     ),
                     (
-                        0.1,
-                        0.2,
+                        0.01,
+                        0.4,
                         1,
                         20,
                     ),
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Dribble_Curriculum_1652757082.5542347/Dribble_Curriculum_3800/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Dribble_Curriculum_1652819638.1524577/Dribble_Curriculum_3861/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
