@@ -164,13 +164,17 @@ class WallDribble(StateSetter):
 
 class EagleState(StateSetter):
     def reset(self, state_wrapper: StateWrapper):
+        rng = np.random.default_rng()
         car = state_wrapper.cars[0]
         if len(state_wrapper.cars) > 1:
             print(f"Found {len(state_wrapper.cars)} cars.")
 
+        rand_x = rng.uniform(2000, 3000)
+        rand_y = rng.uniform(-1000,1000)
+
         state_wrapper.ball.set_pos(
-            x=0,
-            y=0,
+            x=rand_x,
+            y=rand_y,
             z=1944 - random.random() * 5,
         )
         state_wrapper.ball.set_lin_vel(
@@ -185,8 +189,8 @@ class EagleState(StateSetter):
         )
 
         car.set_pos(
-            x=0,
-            y=0,
+            x=rand_x,
+            y=rand_y,
             z=1750,
         )
         car.set_rot(

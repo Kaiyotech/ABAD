@@ -1,28 +1,23 @@
 import os
-import wandb
 
 import torch.jit
-from torch.nn import Linear, Sequential, ReLU
-
+import wandb
 from redis import Redis
-
-from training.rewards import anneal_rewards_fn, MyRewardFunction, EagleReward
-from utils.mybots_parser import DribbleAction
-
-from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
-from training.agent import DiscretePolicy
-from training.my_ppo import PPO
-from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
-from rocket_learn.utils.util import SplitLayer
-from utils.mybots_obs import ExpandAdvancedObs
 from rlgym.utils.reward_functions.combined_reward import CombinedReward
 from rlgym.utils.reward_functions.common_rewards.ball_goal_rewards import VelocityBallToGoalReward
 from rlgym.utils.reward_functions.common_rewards.misc_rewards import EventReward
-from utils.mybots_rewards import DoubleTapReward
+from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
+from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
+from rocket_learn.utils.util import SplitLayer
+from torch.nn import Linear, Sequential, ReLU
 
-from training.Constants import *
+from training.agent import DiscretePolicy
+from training.my_ppo import PPO
+from training.rewards import EagleReward
 from utils.misc import count_parameters
-
+from utils.mybots_obs import ExpandAdvancedObs
+from utils.mybots_parser import DribbleAction
+from utils.mybots_rewards import DoubleTapReward
 
 if __name__ == "__main__":
     config = dict(
@@ -65,7 +60,7 @@ if __name__ == "__main__":
                     ),
                     (
                         0.01,
-                        0.4,
+                        0.3,
                         1,
                         20,
                     ),
@@ -139,7 +134,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Dribble_Curriculum_1652819638.1524577/Dribble_Curriculum_3861/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Dribble_Curriculum_1652850718.6098146/Dribble_Curriculum_4145/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

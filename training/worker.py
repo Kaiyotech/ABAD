@@ -1,34 +1,21 @@
-import sys
 import os
+import sys
+
 import torch
-import ctypes
-
 from redis import Redis
-
 from rlgym.envs import Match
-from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition, NoTouchTimeoutCondition
-from utils.mybots_terminals import BallTouchGroundCondition, EagleTerminalCondition
-from utils.mybots_statesets import WallDribble, GroundAirDribble, BallFrontGoalState, EagleState
-from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
-from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
-from rlgym_tools.extra_state_setters.symmetric_setter import KickoffLikeSetter
-from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
-from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
-from rlgym.utils.state_setters.default_state import DefaultState
-from utils.mybots_obs import ExpandAdvancedObs
-
-from utils.mybots_parser import DribbleAction
-
-from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
-
-from training.Constants import *
-from training.rewards import anneal_rewards_fn, MyRewardFunction, EagleReward
-from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 from rlgym.utils.reward_functions.combined_reward import CombinedReward
 from rlgym.utils.reward_functions.common_rewards.ball_goal_rewards import VelocityBallToGoalReward
 from rlgym.utils.reward_functions.common_rewards.misc_rewards import EventReward
-from utils.mybots_rewards import DoubleTapReward
+from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition
+from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 
+from training.rewards import EagleReward
+from utils.mybots_obs import ExpandAdvancedObs
+from utils.mybots_parser import DribbleAction
+from utils.mybots_rewards import DoubleTapReward
+from utils.mybots_statesets import EagleState
+from utils.mybots_terminals import BallTouchGroundCondition
 
 if __name__ == "__main__":
     # ctypes.windll.kernel32.SetConsoleTitleW("RLearnWorkerABAD")
@@ -70,7 +57,7 @@ if __name__ == "__main__":
                     ),
                     (
                         0.01,
-                        0.4,
+                        0.3,
                         1,
                         20,
                     ),
