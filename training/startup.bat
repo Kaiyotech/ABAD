@@ -5,7 +5,7 @@ copy /b/v/y "C:\Users\kchin\AppData\Roaming\bakkesmod\bakkesmod\cfg\plugins_bots
 cd ..
 start python -m training.learner
 TIMEOUT 10
-REM start python worker.py STREAMER
+REM start python -m training.worker 1 localhost MSI STREAMER
 :loop
 REM FOR /L %%G IN (1,1,5) DO (start python -m training.worker & TIMEOUT 60)
 start python -m training.worker 1 localhost MSI
@@ -26,3 +26,5 @@ REM FOR /F "usebackq tokens=2" %%i IN (`tasklist /v ^| findstr /c:"RLearnWorkerA
 REM FOR /F "usebackq tokens=2" %%j IN (`tasklist ^| findstr /c:"RocketLeague.exe"`) DO taskkill /pid %%j
 REM TIMEOUT 60
 REM GOTO loop
+
+REM copy /b/v/y "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings_bots.ini" "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings.ini"

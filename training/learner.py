@@ -35,7 +35,7 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=5,
     )
-    run_id = "Run1"
+    run_id = "RunV5_3"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="CoyoteV5",
@@ -58,7 +58,7 @@ if __name__ == "__main__":
             velocity_pb_w=0.01,
             velocity_bg_w=0.02,
             kickoff_w=0.015,
-            ball_touch_w=0.075,
+            ball_touch_w=0.05,
             touch_grass_w=-0.001,
         )
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        clear=True,  # update this if starting over
+                                        clear=False,  # update this if starting over
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    # alg.load("checkpoint_save_directory/Coyote_1651729556.420617/Coyote_805/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1653714720.6743393/Coyote_515/checkpoint.pt")
     # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
