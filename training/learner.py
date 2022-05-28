@@ -10,7 +10,7 @@ from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutGenerator
 from rocket_learn.utils.util import SplitLayer
 from torch.nn import Linear, Sequential, ReLU
-
+from training.Constants import T_STEP, TIME_HORIZON
 from training.agent import DiscretePolicy
 from training.my_ppo import PPO
 from training.rewards import EagleReward
@@ -21,7 +21,7 @@ from utils.mybots_rewards import DoubleTapReward
 
 if __name__ == "__main__":
     config = dict(
-        gamma=0.995,   # 1 - (T_STEP / TIME_HORIZON),
+        gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
         learning_rate_critic=0.0002,
         learning_rate_actor=0.0002,
@@ -59,8 +59,8 @@ if __name__ == "__main__":
                         DoubleTapReward(),
                     ),
                     (
-                        0.01,
-                        0.3,
+                        0.005,
+                        0.03,
                         1,
                         20,
                     ),
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        clear=False,  # update this if starting over
+                                        clear=True,  # update this if starting over
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Dribble_Curriculum_1652850718.6098146/Dribble_Curriculum_4145/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Dribble_Curriculum_1652938344.4158366/Dribble_Curriculum_4426/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
