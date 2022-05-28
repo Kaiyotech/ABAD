@@ -38,7 +38,7 @@ if __name__ == "__main__":
     run_id = "Run1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
-                        name="CoyoteV4",
+                        name="CoyoteV5",
                         project="Coyote",
                         entity="kaiyotech",
                         id=run_id,

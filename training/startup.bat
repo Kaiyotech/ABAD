@@ -1,8 +1,9 @@
 REM verify redis is running already (user1@MSI:/$ sudo redis-server /etc/redis/redis.conf)
 call ..\venv\Scripts\activate.bat
-copy /b/v/y "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings_bots.ini" "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings.ini"
+copy /b/v/y "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings_jeff.ini" "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings.ini"
+copy /b/v/y "C:\Users\kchin\AppData\Roaming\bakkesmod\bakkesmod\cfg\plugins_bots.cfg" "C:\Users\kchin\AppData\Roaming\bakkesmod\bakkesmod\cfg\plugins.cfg"
 cd ..
-REM start python -m training.learner
+start python -m training.learner
 TIMEOUT 10
 REM start python worker.py STREAMER
 :loop
