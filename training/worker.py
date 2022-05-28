@@ -1,7 +1,6 @@
 import sys
 import os
 import torch
-import ctypes
 
 from redis import Redis
 
@@ -11,7 +10,6 @@ from utils.mybots_statesets import WallDribble, GroundAirDribble, BallFrontGoalS
 from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
 from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
 from rlgym_tools.extra_state_setters.symmetric_setter import KickoffLikeSetter
-from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
 from rlgym_tools.extra_state_setters.hoops_setter import HoopsLikeSetter
 from rlgym.utils.state_setters.default_state import DefaultState
 from utils.mybots_obs import ExpandAdvancedPaddedObs
@@ -21,7 +19,7 @@ from utils.nectoparser import NectoAction
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 
 from training.Constants import *
-from training.rewards import anneal_rewards_fn, MyRewardFunction
+from training.rewards import MyRewardFunction
 from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 
 
@@ -99,13 +97,13 @@ if __name__ == "__main__":
                         (
                         0.05,  # groundair
                         0.05,  # wallair
-                        0.35,  # kickofflike ground
+                        0.3,  # kickofflike ground
                         0.1,  # kickofflike air
                         0.05,  # wall
                         # 0.10,  # goalie
                         0.10,  # hoops
                         0.3,  # default kickoff
-                        0,  # ball front goal
+                        0.05,  # ball front goal
                         ),
                     ),
         obs_builder=ExpandAdvancedPaddedObs(),
@@ -114,24 +112,12 @@ if __name__ == "__main__":
                              GoalScoredCondition(),
                              ],
         reward_function=MyRewardFunction(
-            team_spirit=0,
             goal_w=5,
-            aerial_goal_w=2,
-            double_tap_goal_w=0,
-            shot_w=0.5,
-            save_w=2,
-            demo_w=1,
-            above_w=0,
-            got_demoed_w=-1,
-            behind_ball_w=0,
-            save_boost_w=0,
             concede_w=-5,
-            velocity_w=0.0125,
-            velocity_pb_w=0.025,
-            velocity_bg_w=0.25,
-            aerial_ball_touch_w=10,
-            kickoff_w=0.25,
-            ball_touch_w=0.00,
+            velocity_pb_w=0.01,
+            velocity_bg_w=0.02,
+            kickoff_w=0.015,
+            ball_touch_w=0.075,
             touch_grass_w=-0.001,
         )
     )

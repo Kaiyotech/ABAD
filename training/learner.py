@@ -6,7 +6,7 @@ from torch.nn import Linear, Sequential, ReLU
 
 from redis import Redis
 
-from training.rewards import anneal_rewards_fn, MyRewardFunction
+from training.rewards import MyRewardFunction
 from utils.nectoparser import NectoAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
@@ -28,17 +28,17 @@ if __name__ == "__main__":
         learning_rate_actor=1e-4,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=2_000_000,  # testing 2M normal
-        batch_size=400_000,  # testing 200k normal
+        target_steps=400_000,  # testing 2M normal
+        batch_size=100_000,  # testing 200k normal
         minibatch_size=None,
         n_bins=3,
         n_epochs=30,
         iterations_per_save=5,
     )
-    run_id = "Run432"
+    run_id = "Run1"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
-                        name="CoyoteV3",
+                        name="CoyoteV4",
                         project="Coyote",
                         entity="kaiyotech",
                         id=run_id,
@@ -53,24 +53,12 @@ if __name__ == "__main__":
 
     def rew():
         return MyRewardFunction(
-            team_spirit=0,
             goal_w=5,
-            aerial_goal_w=2,
-            double_tap_goal_w=0,
-            shot_w=0.5,
-            save_w=2,
-            demo_w=1,
-            above_w=0,
-            got_demoed_w=-1,
-            behind_ball_w=0,
-            save_boost_w=0,
             concede_w=-5,
-            velocity_w=0.0125,
-            velocity_pb_w=0.025,
-            velocity_bg_w=0.25,
-            aerial_ball_touch_w=10,
-            kickoff_w=0.25,
-            ball_touch_w=0.00,
+            velocity_pb_w=0.01,
+            velocity_bg_w=0.02,
+            kickoff_w=0.015,
+            ball_touch_w=0.075,
             touch_grass_w=-0.001,
         )
 
@@ -83,7 +71,7 @@ if __name__ == "__main__":
     rollout_gen = RedisRolloutGenerator(redis, obs, rew, act,
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
-                                        clear=False,  # update this if starting over
+                                        clear=True,  # update this if starting over
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
@@ -97,11 +85,11 @@ if __name__ == "__main__":
     state_dim = 231  # + (8*5)    # normal is 107
 
     critic = Sequential(
-        Linear(state_dim, 256),
+        Linear(state_dim, 1024),
         ReLU(),
-        Linear(256, 256),
+        Linear(1024, 1024),
         ReLU(),
-        Linear(256, 1)
+        Linear(1024, 1)
     )
 
     actor = DiscretePolicy(Sequential(
@@ -142,7 +130,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1651729556.420617/Coyote_805/checkpoint.pt")
+    # alg.load("checkpoint_save_directory/Coyote_1651729556.420617/Coyote_805/checkpoint.pt")
     # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
