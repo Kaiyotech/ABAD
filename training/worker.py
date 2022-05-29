@@ -31,7 +31,7 @@ if __name__ == "__main__":
     team_size = 1
     host = "127.0.0.1"
     past_version_prob = 0.2  # 0.2
-    evaluation_prob = 0.01  # 0.01
+    evaluation_prob = 0  # 0.01
     name = "Default"
     if len(sys.argv) > 1:
         team_size = int(sys.argv[1])
@@ -95,15 +95,15 @@ if __name__ == "__main__":
                         ),
                         ),
                         (
-                        0.05,  # groundair
-                        0.05,  # wallair
-                        0.3,  # kickofflike ground
-                        0.1,  # kickofflike air
+                        0.025,  # groundair
+                        0.025,  # wallair
+                        0.35,  # kickofflike ground
+                        0.15,  # kickofflike air
                         0.05,  # wall
                         # 0.10,  # goalie
-                        0.10,  # hoops
+                        0.1,  # hoops
                         0.3,  # default kickoff
-                        0.05,  # ball front goal
+                        0,  # ball front goal
                         ),
                     ),
         obs_builder=ExpandAdvancedPaddedObs(),
@@ -117,7 +117,7 @@ if __name__ == "__main__":
             velocity_pb_w=0.01,
             velocity_bg_w=0.02,
             kickoff_w=0.015,
-            ball_touch_w=0.05,
+            ball_touch_w=0.025,
             touch_grass_w=-0.001,
         )
     )
