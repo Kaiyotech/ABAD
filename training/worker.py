@@ -31,7 +31,7 @@ if __name__ == "__main__":
     team_size = 1
     host = "127.0.0.1"
     past_version_prob = 0.2  # 0.2
-    evaluation_prob = 0  # 0.01
+    evaluation_prob = 0.02  # 0.01
     name = "Default"
     if len(sys.argv) > 1:
         team_size = int(sys.argv[1])
@@ -114,11 +114,11 @@ if __name__ == "__main__":
         reward_function=MyRewardFunction(
             goal_w=5,
             concede_w=-5,
-            velocity_pb_w=0.01,
+            velocity_pb_w=0,
             velocity_bg_w=0.02,
             kickoff_w=0.015,
-            ball_touch_w=0.025,
-            touch_grass_w=-0.001,
+            ball_touch_w=0.005,
+            touch_grass_w=-0.003,
         )
     )
 
