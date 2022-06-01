@@ -9,7 +9,7 @@ REM start python -m training.worker 1 localhost MSI STREAMER
 :loop
 REM FOR /L %%G IN (1,1,5) DO (start python -m training.worker & TIMEOUT 60)
 start python -m training.worker 1 localhost MSI
-pause
+TIMEOUT 30
 start python -m training.worker 1 localhost MSI
 TIMEOUT 30
 start python -m training.worker 1 localhost MSI
