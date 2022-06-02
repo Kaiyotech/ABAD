@@ -28,14 +28,14 @@ if __name__ == "__main__":
         learning_rate_actor=1e-4,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=2_000_000,  # testing 2M normal
-        batch_size=400_000,  # testing 200k normal
-        minibatch_size=200_000,
+        target_steps=400_000,  # testing 2M normal
+        batch_size=100_000,  # testing 400k normal
+        minibatch_size=None,  # testing 200k normal
         n_bins=3,
         n_epochs=30,
         iterations_per_save=1,
     )
-    run_id = "RunV5_7"
+    run_id = "RunV5_8"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="CoyoteV5",
