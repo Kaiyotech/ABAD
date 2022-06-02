@@ -24,18 +24,18 @@ if __name__ == "__main__":
     config = dict(
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=1e-4,
-        learning_rate_actor=1e-4,
+        learning_rate_critic=7e-5,
+        learning_rate_actor=7e-5,
         ent_coef=0.01,
         vf_coef=1.,
-        target_steps=400_000,  # testing 2M normal
-        batch_size=100_000,  # testing 400k normal
-        minibatch_size=None,  # testing 200k normal
+        target_steps=2_000_000,  # testing 2M normal
+        batch_size=400_000,  # testing 400k normal
+        minibatch_size=200_000,  # testing 200k normal
         n_bins=3,
         n_epochs=30,
         iterations_per_save=1,
     )
-    run_id = "RunV5_8"
+    run_id = "RunV5_9"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="CoyoteV5",
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654117864.3808806/Coyote_1558/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1654135048.1055703/Coyote_1585/checkpoint.pt")
     # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
