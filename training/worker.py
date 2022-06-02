@@ -115,10 +115,10 @@ if __name__ == "__main__":
             goal_w=5,
             concede_w=-5,
             velocity_pb_w=0,
-            velocity_bg_w=0.02,
+            velocity_bg_w=0.015,
             kickoff_w=0.015,
             ball_touch_w=0.005,
-            touch_grass_w=-0.003,
+            touch_grass_w=-0.006,
         )
     )
 

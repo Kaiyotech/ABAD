@@ -35,7 +35,7 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=1,
     )
-    run_id = "RunV5_9"
+    run_id = "RunV5_10"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="CoyoteV5",
@@ -56,10 +56,10 @@ if __name__ == "__main__":
             goal_w=5,
             concede_w=-5,
             velocity_pb_w=0,
-            velocity_bg_w=0.02,
+            velocity_bg_w=0.015,
             kickoff_w=0.015,
             ball_touch_w=0.005,
-            touch_grass_w=-0.003,
+            touch_grass_w=-0.006,
         )
 
     def act():
@@ -130,9 +130,9 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654135048.1055703/Coyote_1585/checkpoint.pt")
-    # alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
-    # alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
+    alg.load("checkpoint_save_directory/Coyote_1654141943.068987/Coyote_1639/checkpoint.pt")
+    alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
+    alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
     # SPECIFIES HOW OFTEN CHECKPOINTS ARE SAVED
     alg.run(iterations_per_save=logger.config.iterations_per_save, save_dir="checkpoint_save_directory")
