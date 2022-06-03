@@ -35,7 +35,7 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=1,
     )
-    run_id = "RunV5_10"
+    run_id = "RunV5_11"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="CoyoteV5",
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654141943.068987/Coyote_1639/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1654180264.25056/Coyote_1708/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

@@ -3,7 +3,7 @@ call ..\venv\Scripts\activate.bat
 copy /b/v/y "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings_jeff.ini" "C:\Users\kchin\Documents\My Games\Rocket League\TAGame\Config\TASystemSettings.ini"
 copy /b/v/y "C:\Users\kchin\AppData\Roaming\bakkesmod\bakkesmod\cfg\plugins_bots.cfg" "C:\Users\kchin\AppData\Roaming\bakkesmod\bakkesmod\cfg\plugins.cfg"
 cd ..
-python -m training.learner
+start python -m training.learner
 TIMEOUT 10
 REM start python -m training.worker 1 localhost MSI STREAMER
 :loop
