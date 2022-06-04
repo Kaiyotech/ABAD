@@ -118,7 +118,7 @@ if __name__ == "__main__":
             velocity_bg_w=0.015,
             kickoff_w=0.015,
             ball_touch_w=0.005,
-            touch_grass_w=-0.006,
+            touch_grass_w=-0.01,
         )
     )
 
