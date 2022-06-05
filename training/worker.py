@@ -95,7 +95,7 @@ if __name__ == "__main__":
                         ),
                         ),
                         (
-                        0.025,  # groundair
+                        0,  # groundair
                         0.025,  # wallair
                         0.35,  # kickofflike ground
                         0.15,  # kickofflike air
@@ -115,10 +115,13 @@ if __name__ == "__main__":
             goal_w=5,
             concede_w=-5,
             velocity_pb_w=0,
-            velocity_bg_w=0.015,
+            velocity_bg_w=0.005,
             kickoff_w=0.015,
-            ball_touch_w=0.005,
+            ball_touch_w=0.01,
             touch_grass_w=-0.01,
+            acel_car_w=0.01,
+            acel_ball_w=0.01,
+            boost_w=0.01,
         )
     )
 
