@@ -14,6 +14,8 @@ from rlgym.utils.reward_functions.common_rewards.conditional_rewards import *
 from rlgym.utils.reward_functions import RewardFunction, CombinedReward
 from rlgym_tools.extra_rewards.distribute_rewards import DistributeRewards
 
+from numpy.linalg import norm
+
 
 class AerialGoalReward(RewardFunction):
 
@@ -216,3 +218,58 @@ class TouchGrass(RewardFunction):
             return 1
         else:
             return 0
+
+
+class AccelBallReward(RewardFunction):
+
+    def __init__(self):
+        self.last_vel = None
+
+    def reset(self, initial_state: GameState):
+        self.last_vel = initial_state.ball.linear_velocity
+
+    def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        if player.ball_touched:
+            curr_vel = state.ball.linear_velocity
+            reward = norm(curr_vel - self.last_vel) / CAR_MAX_SPEED
+            self.last_vel = curr_vel
+            return reward
+        else:
+            return 0
+
+
+class AccelCarReward(RewardFunction):
+
+    def __init__(self):
+        self.last_vel = None
+
+    def reset(self, initial_state: GameState):
+        self.last_vel = None  # this isn't exactly right, but I'm not sure what to do better
+
+    def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        curr_vel = player.car_data.linear_velocity
+        if self.last_vel is None:
+            self.last_vel = curr_vel
+            return 0
+        reward = norm(curr_vel - self.last_vel) / CAR_MAX_SPEED
+        self.last_vel = curr_vel
+        return reward
+
+
+class BoostReward(RewardFunction):
+
+    def __init__(self):
+        self.last_boost = None
+
+    def reset(self, initial_state: GameState):
+        self.last_boost = None  # this isn't exactly right, but I'm not sure what to do better
+
+    def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        curr_boost = player.boost_amount
+        if self.last_boost is None:
+            self.last_boost = curr_boost
+            return 0
+        reward = np.sqrt(curr_boost) - np.sqrt(self.last_boost)
+        self.last_boost = curr_boost
+        return reward
+

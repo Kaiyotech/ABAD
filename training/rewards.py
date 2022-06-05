@@ -41,6 +41,9 @@ class MyRewardFunction(CombinedReward):
             ball_touch_w=0.25,
             kickoff_w=0.5,
             touch_grass_w=-0.001,
+            acel_car_w=0.01,
+            acel_ball_w=0.01,
+            boost_w=0.01,
     ):
         self.goal_w = goal_w
         self.concede_w = concede_w
@@ -49,6 +52,9 @@ class MyRewardFunction(CombinedReward):
         self.ball_touch_w = ball_touch_w
         self.kickoff_w = kickoff_w
         self.touch_grass_w = touch_grass_w
+        self.acel_car_w = acel_car_w
+        self.acel_ball_w = acel_ball_w
+        self.boost_w = boost_w
         # self.rewards = None
         super().__init__(
             reward_functions=(
@@ -61,6 +67,9 @@ class MyRewardFunction(CombinedReward):
                 ),
                 KickoffReward(),
                 TouchGrass(),
+                AccelCarReward(),
+                AccelBallReward(),
+                BoostReward(),
             ),
             reward_weights=(
                 self.velocity_pb_w,
@@ -68,6 +77,9 @@ class MyRewardFunction(CombinedReward):
                 1.0,
                 self.kickoff_w,
                 self.touch_grass_w,
+                self.acel_car_w,
+                self.acel_ball_w,
+                self.boost_w,
             )
         )
 

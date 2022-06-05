@@ -25,7 +25,7 @@ if __name__ == "__main__":
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
         learning_rate_critic=7e-5,
-        learning_rate_actor=7e-5,
+        learning_rate_actor=0,  # 7e-5,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=2_000_000,  # testing 2M normal
@@ -35,7 +35,7 @@ if __name__ == "__main__":
         n_epochs=30,
         iterations_per_save=1,
     )
-    run_id = "RunV5_11"
+    run_id = "RunV5_12"
     wandb.login(key=os.environ["WANDB_KEY"])
     logger = wandb.init(dir="wandb_store",
                         name="CoyoteV5",
@@ -56,10 +56,13 @@ if __name__ == "__main__":
             goal_w=5,
             concede_w=-5,
             velocity_pb_w=0,
-            velocity_bg_w=0.015,
+            velocity_bg_w=0.005,
             kickoff_w=0.015,
-            ball_touch_w=0.005,
+            ball_touch_w=0.01,
             touch_grass_w=-0.01,
+            acel_car_w=0.01,
+            acel_ball_w=0.01,
+            boost_w=0.01,
         )
 
     def act():
@@ -130,7 +133,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654285320.7344675/Coyote_1832/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1654319840.8086092/Coyote_1970/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
