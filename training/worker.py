@@ -19,7 +19,7 @@ from utils.nectoparser import NectoAction
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
 
 from training.Constants import *
-from training.rewards import MyRewardFunction
+from training.rewards import CoyoteReward
 from rlgym_tools.extra_state_setters.augment_setter import AugmentSetter
 
 
@@ -95,11 +95,11 @@ if __name__ == "__main__":
                         ),
                         ),
                         (
-                        0,  # groundair
+                        0.025,  # groundair make this 0
                         0.025,  # wallair
                         0.35,  # kickofflike ground
                         0.15,  # kickofflike air
-                        0.05,  # wall
+                        0.05,  # wall make this 0.075
                         # 0.10,  # goalie
                         0.1,  # hoops
                         0.3,  # default kickoff
@@ -111,18 +111,7 @@ if __name__ == "__main__":
         terminal_conditions=[TimeoutCondition(round(300 // T_STEP)),
                              GoalScoredCondition(),
                              ],
-        reward_function=MyRewardFunction(
-            goal_w=5,
-            concede_w=-5,
-            velocity_pb_w=0,
-            velocity_bg_w=0.005,
-            kickoff_w=0.015,
-            ball_touch_w=0.01,
-            touch_grass_w=-0.01,
-            acel_car_w=0.01,
-            acel_ball_w=0.01,
-            boost_w=0.01,
-        )
+        reward_function=CoyoteReward(),
     )
 
     r = Redis(host=host, username="user1", password=os.environ["redis_user1_key"])

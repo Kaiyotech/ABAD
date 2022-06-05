@@ -6,7 +6,7 @@ from torch.nn import Linear, Sequential, ReLU
 
 from redis import Redis
 
-from training.rewards import MyRewardFunction
+from training.rewards import CoyoteReward
 from utils.nectoparser import NectoAction
 
 from rocket_learn.agent.actor_critic_agent import ActorCriticAgent
@@ -25,7 +25,7 @@ if __name__ == "__main__":
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
         learning_rate_critic=7e-5,
-        learning_rate_actor=0,  # 7e-5,
+        learning_rate_actor=7e-5,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=2_000_000,  # testing 2M normal
@@ -52,18 +52,7 @@ if __name__ == "__main__":
         return ExpandAdvancedPaddedObs()
 
     def rew():
-        return MyRewardFunction(
-            goal_w=5,
-            concede_w=-5,
-            velocity_pb_w=0,
-            velocity_bg_w=0.005,
-            kickoff_w=0.015,
-            ball_touch_w=0.01,
-            touch_grass_w=-0.01,
-            acel_car_w=0.01,
-            acel_ball_w=0.01,
-            boost_w=0.01,
-        )
+        return CoyoteReward()
 
     def act():
         return NectoAction()  # KBMAction(n_bins=N_BINS)
@@ -133,7 +122,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654319840.8086092/Coyote_1970/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1654319840.8086092/Coyote_1980/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 

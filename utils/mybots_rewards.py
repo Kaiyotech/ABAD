@@ -20,6 +20,7 @@ from numpy.linalg import norm
 class AerialGoalReward(RewardFunction):
 
     def __init__(self):
+        raise NotImplemented  # this only works for 1v0 currently, may have bugs?
         self.last_touch_height = 0
         self.initial_state = None
         self.last_goal = None
@@ -49,6 +50,7 @@ class AerialGoalReward(RewardFunction):
 class DoubleTapReward(RewardFunction):
 
     def __init__(self):
+        raise NotImplemented  # this only works for 1v0 currently, may have bugs?
         self.backboard_bounce = False
         self.floor_bounce = False
         self.last_goal = 0
@@ -83,6 +85,7 @@ class AerialRewardPerTouch(RewardFunction):
         """
 
     def __init__(self, exp_base=1.06, max_touches_reward=20):
+        raise NotImplemented  # this only works for 1v0 currently
         self.exp_base = exp_base
         self.max_touches_reward = max_touches_reward
         self.num_touches = 0
@@ -112,6 +115,7 @@ class IncreaseRewardPerTouch(RewardFunction):
     """
 
     def __init__(self, exp_base=1.06, max_touches_reward=20):
+        raise NotImplemented  # this only works for 1v0 currently
         self.exp_base = exp_base
         self.max_touches_reward = max_touches_reward
         self.num_touches = 0
@@ -135,6 +139,7 @@ class AboveCrossbar(RewardFunction):
     # or aimed towards
     # ball, to reward good aerials pretty aggressively
     def __init__(self, defense=1., offense=1.):
+        raise NotImplemented
         self.defense = defense
         self.offense = offense
 
@@ -244,9 +249,10 @@ class AccelCarReward(RewardFunction):
         self.last_vel = None
 
     def reset(self, initial_state: GameState):
-        self.last_vel = None  # this isn't exactly right, but I'm not sure what to do better
+        self.last_vel = initial_state
 
     def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        i = player.car_id
         curr_vel = player.car_data.linear_velocity
         if self.last_vel is None:
             self.last_vel = curr_vel
@@ -273,3 +279,131 @@ class BoostReward(RewardFunction):
         self.last_boost = curr_boost
         return reward
 
+
+class CoyoteReward(RewardFunction):
+
+    def __init__(
+        self,
+        goal_w=5,
+        concede_w=-5,
+        velocity_pb_w=0,
+        velocity_bg_w=0.015,  # 0.005,
+        kickoff_w=0.015,
+        ball_touch_w=0.005,  # 0.01,
+        touch_grass_w=-0.01,
+        acel_car_w=0,  # 0.01,
+        acel_ball_w=0,  # 0.01,
+        boost_gain_w=0,  # 0.01,
+        boost_spend_w=0,  # -0.01,
+    ):
+        self.goal_w = goal_w
+        self.concede_w = concede_w
+        self.velocity_pb_w = velocity_pb_w
+        self.velocity_bg_w = velocity_bg_w
+        self.ball_touch_w = ball_touch_w
+        self.kickoff_w = kickoff_w
+        self.touch_grass_w = touch_grass_w
+        self.acel_car_w = acel_car_w
+        self.acel_ball_w = acel_ball_w
+        self.boost_gain_w = boost_gain_w
+        self.boost_spend_w = boost_spend_w
+        self.been_touched = False
+        self.last_touched = None
+        self.rewards = None
+        self.current_state = None
+        self.last_state = None
+        self.n = 0
+
+    def _calculate_rewards(self, state: GameState):
+        # Calculate rewards, positive for blue, negative for orange
+        player_rewards = np.zeros(len(state.players))
+        # ball_height = state.ball.position[2]
+
+        for i, player in enumerate(state.players):
+            last = self.last_state.players[i]
+
+            if player.ball_touched:
+                self.been_touched = True  # someone has touched the ball
+                self.last_touched = i
+                # ball touch
+                player_rewards[i] += self.ball_touch_w
+
+                # vel bg
+                if player.team_num == BLUE_TEAM:
+                    objective = np.array(ORANGE_GOAL_BACK)
+                else:
+                    objective = np.array(BLUE_GOAL_BACK)
+                vel = state.ball.linear_velocity
+                pos_diff = objective - state.ball.position
+                norm_pos_diff = pos_diff / np.linalg.norm(pos_diff)
+                norm_vel = vel / BALL_MAX_SPEED
+                player_rewards[i] += self.velocity_bg_w * float(np.dot(norm_pos_diff, norm_vel))
+
+                # acel_ball
+                curr_ball_vel = self.current_state.ball.linear_velocity
+                last_ball_vel = self.last_state.ball.linear_velocity
+                player_rewards[i] += self.acel_ball_w * (norm(curr_ball_vel - last_ball_vel) / CAR_MAX_SPEED)
+
+            # boost
+            boost_diff = np.sqrt(player.boost_amount) - np.sqrt(last.boost_amount)
+            if boost_diff >= 0:
+                player_rewards[i] += self.boost_gain_w * boost_diff
+            else:
+                player_rewards[i] += self.boost_spend_w * boost_diff
+
+            # touch_grass
+            player_rewards[i] += self.touch_grass_w * player.on_ground
+
+            # vel pb
+            vel = player.car_data.linear_velocity
+            pos_diff = state.ball.position - player.car_data.position
+            norm_pos_diff = pos_diff / np.linalg.norm(pos_diff)
+            norm_vel = vel / CAR_MAX_SPEED
+            speed_rew = float(np.dot(norm_pos_diff, norm_vel))
+            player_rewards[i] += self.velocity_pb_w * speed_rew
+
+            # kickoff extra reward for speed to ball
+            if state.ball.position[0] == 0 and state.ball.position[1] == 0:
+                player_rewards[i] += self.kickoff_w * speed_rew
+
+            # acel_car
+            curr_car_vel = player.car_data.linear_velocity
+            last_car_vel = last.car_data.linear_velocity
+            player_rewards[i] += self.acel_car_w * (norm(curr_car_vel - last_car_vel) / CAR_MAX_SPEED)
+
+        mid = len(player_rewards) // 2
+
+        # Handle goals with no scorer for critic consistency,
+        # random state could send ball straight into goal
+        # TODO fix this for more than 1v1 to be only award the scorer?
+        if self.been_touched:
+            d_blue = state.blue_score - self.last_state.blue_score
+            d_orange = state.orange_score - self.last_state.orange_score
+            if d_blue > 0:
+                goal_speed = norm(self.last_state.ball.linear_velocity)
+                player_rewards[:mid] = (self.goal_w * goal_speed / (CAR_MAX_SPEED * 1.25))
+                player_rewards[mid:] = self.concede_w
+            if d_orange > 0:
+                goal_speed = norm(self.last_state.ball.linear_velocity)
+                player_rewards[mid:] = (self.goal_w * goal_speed / (CAR_MAX_SPEED * 1.25))
+                player_rewards[:mid] = self.concede_w
+
+        self.last_state = state
+        self.rewards = player_rewards
+
+    def reset(self, initial_state: GameState):
+        self.n = 0
+        self.last_state = None
+        self.rewards = None
+        self.current_state = initial_state
+        self.been_touched = False
+
+    def get_reward(self, player: PlayerData, state: GameState, previous_action: np.ndarray) -> float:
+        if state != self.current_state:
+            self.last_state = self.current_state
+            self.current_state = state
+            self._calculate_rewards(state)
+            self.n = 0
+        rew = self.rewards[self.n]
+        self.n += 1
+        return float(rew)
