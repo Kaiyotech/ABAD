@@ -24,8 +24,8 @@ if __name__ == "__main__":
     config = dict(
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=7e-5,
-        learning_rate_actor=7e-5,
+        learning_rate_critic=1e-4,
+        learning_rate_actor=1e-4,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=2_000_000,  # testing 2M normal
@@ -46,6 +46,7 @@ if __name__ == "__main__":
                         )
 
     redis = Redis(username="user1", password=os.environ["redis_user1_key"])  # host="192.168.0.201",
+    redis.delete("worker-ids")
 
     # ENSURE OBSERVATION, REWARD, AND ACTION CHOICES ARE THE SAME IN THE WORKER
     def obs():
@@ -122,7 +123,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654408897.9856603/Coyote_2010/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1654428720.9855726/Coyote_2086/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
