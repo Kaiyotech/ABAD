@@ -288,13 +288,14 @@ class CoyoteReward(RewardFunction):
         concede_w=-5,
         velocity_pb_w=0,
         velocity_bg_w=0.005,  # 0.005,
-        kickoff_w=0.025,
-        ball_touch_w=0.02,  # 0.01,
+        kickoff_w=0.05,
+        ball_touch_w=0,  # 0.01,
         touch_grass_w=-0.001,
-        acel_car_w=0.025,  # 0.01,
-        acel_ball_w=0.035,  # 0.01,
-        boost_gain_w=0.02,  # 0.01,
-        boost_spend_w=-0.025,  # -0.01,
+        acel_car_w=0.2,  # 0.01,
+        acel_ball_w=0.2,  # 0.01,
+        boost_gain_w=0.05,  # 0.01,
+        boost_spend_w=-0.06,  # -0.01,
+        ball_touch_dribble=0.03,
     ):
         self.goal_w = goal_w
         self.concede_w = concede_w
@@ -307,6 +308,7 @@ class CoyoteReward(RewardFunction):
         self.acel_ball_w = acel_ball_w
         self.boost_gain_w = boost_gain_w
         self.boost_spend_w = boost_spend_w
+        self.ball_touch_dribble_w = ball_touch_dribble
         self.been_touched = False
         self.last_touched = None
         self.rewards = None
@@ -327,6 +329,8 @@ class CoyoteReward(RewardFunction):
                 self.last_touched = i
                 # ball touch
                 player_rewards[i] += self.ball_touch_w
+                if state.ball.position[2] > 12:
+                    player_rewards[i] += self.ball_touch_dribble_w
 
                 # vel bg
                 if player.team_num == BLUE_TEAM:

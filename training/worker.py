@@ -97,12 +97,12 @@ if __name__ == "__main__":
                         (
                         0,  # groundair make this 0
                         0.025,  # wallair
-                        0.35,  # kickofflike ground
+                        0.225,  # kickofflike ground
                         0.15,  # kickofflike air
-                        0.075,  # wall make this 0.075
+                        0.25,  # wall make this 0.075
                         # 0.10,  # goalie
                         0.1,  # hoops
-                        0.3,  # default kickoff
+                        0.25,  # default kickoff
                         0,  # ball front goal
                         ),
                     ),
