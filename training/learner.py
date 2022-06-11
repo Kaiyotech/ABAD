@@ -123,7 +123,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654834605.6055675/Coyote_2701/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1654922960.948447/Coyote_2781/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
