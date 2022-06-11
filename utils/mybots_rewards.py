@@ -290,12 +290,12 @@ class CoyoteReward(RewardFunction):
         velocity_bg_w=0.005,  # 0.005,
         kickoff_w=0.05,
         ball_touch_w=0,  # 0.01,
-        touch_grass_w=-0.001,
-        acel_car_w=0.2,  # 0.01,
-        acel_ball_w=0.2,  # 0.01,
-        boost_gain_w=0.05,  # 0.01,
-        boost_spend_w=-0.06,  # -0.01,
-        ball_touch_dribble=0.03,
+        touch_grass_w=-0.003,
+        acel_car_w=0.1,  # 0.01,
+        acel_ball_w=0.1,  # 0.01,
+        boost_gain_w=0.025,  # 0.01,
+        boost_spend_w=-0.03,  # -0.01,
+        ball_touch_dribble=0.04,
     ):
         self.goal_w = goal_w
         self.concede_w = concede_w
