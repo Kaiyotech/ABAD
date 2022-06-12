@@ -131,5 +131,5 @@ if __name__ == "__main__":
                        send_gamestates=False,
                        evaluation_prob=evaluation_prob,
                        sigma_target=2,
-                       pretrained_agents=pretrained_agents
+                       # pretrained_agents=pretrained_agents
                        ).run()
