@@ -65,6 +65,7 @@ if __name__ == "__main__":
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
                                         clear=False,  # update this if starting over
+                                        smooth_ts=True,
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT

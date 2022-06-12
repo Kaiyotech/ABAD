@@ -17,6 +17,7 @@ from utils.mybots_obs import ExpandAdvancedPaddedObs
 from utils.nectoparser import NectoAction
 
 from rocket_learn.rollout_generator.redis_rollout_generator import RedisRolloutWorker
+from pretrained_agents.necto.necto_v1 import NectoV1
 
 from training.Constants import *
 from training.rewards import CoyoteReward
@@ -96,13 +97,13 @@ if __name__ == "__main__":
                         ),
                         (
                         0,  # groundair make this 0
-                        0.025,  # wallair
-                        0.225,  # kickofflike ground
+                        0.05,  # wallair
+                        0.05,  # kickofflike ground
                         0.15,  # kickofflike air
-                        0.25,  # wall make this 0.075
-                        # 0.10,  # goalie
-                        0.1,  # hoops
-                        0.25,  # default kickoff
+                        0.30,  # wall make this 0.075
+                        0.10,  # goalie
+                        0.20,  # hoops
+                        0.15,  # default kickoff
                         0,  # ball front goal
                         ),
                     ),
@@ -115,6 +116,11 @@ if __name__ == "__main__":
     )
 
     r = Redis(host=host, username="user1", password=os.environ["redis_user1_key"])
+
+    model_name = "necto-model-10Y.pt"
+    nectov1 = NectoV1(model_string=model_name, n_players=team_size * 2)
+    pretrained_agents = {nectov1: .15}
+
     RedisRolloutWorker(r,
                        name,
                        match,
@@ -123,4 +129,5 @@ if __name__ == "__main__":
                        send_gamestates=False,
                        evaluation_prob=evaluation_prob,
                        sigma_target=2,
+                       pretrained_agents=pretrained_agents
                        ).run()
