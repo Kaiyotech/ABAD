@@ -6,6 +6,8 @@ from redis import Redis
 
 from rlgym.envs import Match
 from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition
+from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
+
 from utils.mybots_statesets import WallDribble, GroundAirDribble, BallFrontGoalState
 from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
 from rlgym_tools.extra_state_setters.wall_state import WallPracticeState
@@ -79,14 +81,14 @@ if __name__ == "__main__":
                         AugmentSetter(
                             WallPracticeState()
                             ),
-                        # AugmentSetter(  # TODO don't use this unti you don't allow random goals
-                        #     GoaliePracticeState(
-                        #         allow_enemy_interference=True,
-                        #         aerial_only=False,
-                        #         first_defender_in_goal=True,
-                        #         reset_to_max_boost=False,
-                        #         )
-                        #     ),
+                        AugmentSetter(
+                            GoaliePracticeState(
+                                allow_enemy_interference=True,
+                                aerial_only=False,
+                                first_defender_in_goal=True,
+                                reset_to_max_boost=False,
+                                )
+                            ),
                         AugmentSetter(
                             HoopsLikeSetter()
                         ),
