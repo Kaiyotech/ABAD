@@ -65,6 +65,7 @@ if __name__ == "__main__":
                                         logger=logger,
                                         save_every=logger.config.iterations_per_save,
                                         clear=False,  # update this if starting over
+                                        smooth_ts=True,
                                         )
 
     # ROCKET-LEARN EXPECTS A SET OF DISTRIBUTIONS FOR EACH ACTION FROM THE NETWORK, NOT
@@ -123,7 +124,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1654922960.948447/Coyote_2781/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1654972824.6316457/Coyote_2838/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
