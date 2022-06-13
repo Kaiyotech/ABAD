@@ -53,9 +53,7 @@ def _plot_ratings(ratings, logger_):
     fig_smooth = go.Figure([
         go.Scatter(
             x=x,
-            y=signal.savgol_filter(y,
-                                   43,  # window size used for filtering
-                                   5),  # order of fitted polynomial
+            y=signal.medfilt(y, 21),
             line=dict(color='rgb(175, 79, 219)'),
             mode='lines',
             name='Smoothed',
@@ -82,8 +80,6 @@ if __name__ == "__main__":
                         )
 
     redis = Redis(username="user1", password=os.environ["redis_user1_key"])  # host="192.168.0.201",
-    print(redis.lrange(QUALITIES, 0, 1))
-    time.sleep(10)
     _plot_ratings([Rating(*_unserialize(v)) for v in redis.lrange(QUALITIES, 0, -1)], logger)
 
 
