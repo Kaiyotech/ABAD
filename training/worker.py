@@ -84,7 +84,7 @@ if __name__ == "__main__":
                         AugmentSetter(
                             GoaliePracticeState(
                                 allow_enemy_interference=True,
-                                aerial_only=False,
+                                aerial_only=True,
                                 first_defender_in_goal=True,
                                 reset_to_max_boost=False,
                                 )
@@ -99,13 +99,13 @@ if __name__ == "__main__":
                         ),
                         (
                         0,  # groundair make this 0
-                        0.05,  # wallair
-                        0.05,  # kickofflike ground
-                        0.15,  # kickofflike air
-                        0.30,  # wall make this 0.075
-                        0.10,  # goalie
-                        0.20,  # hoops
-                        0.15,  # default kickoff
+                        0.10,  # wallair
+                        0.025,  # kickofflike ground
+                        0.30,  # kickofflike air
+                        0.20,  # wall make this 0.075
+                        0.20,  # goalie
+                        0.10,  # hoops
+                        0.075,  # default kickoff
                         0,  # ball front goal
                         ),
                     ),
@@ -131,5 +131,5 @@ if __name__ == "__main__":
                        send_gamestates=False,
                        evaluation_prob=evaluation_prob,
                        sigma_target=2,
-                       # pretrained_agents=pretrained_agents
+                       pretrained_agents=pretrained_agents
                        ).run()
