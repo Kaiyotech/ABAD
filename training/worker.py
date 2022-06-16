@@ -33,7 +33,7 @@ if __name__ == "__main__":
     game_speed = 100
     team_size = 1
     host = "127.0.0.1"
-    past_version_prob = 0.2  # 0.2
+    past_version_prob = 0  # 0.2
     evaluation_prob = 0.02  # 0.01
     name = "Default"
     if len(sys.argv) > 1:
@@ -131,5 +131,5 @@ if __name__ == "__main__":
                        send_gamestates=False,
                        evaluation_prob=evaluation_prob,
                        sigma_target=2,
-                       pretrained_agents=pretrained_agents
+                       # pretrained_agents=pretrained_agents
                        ).run()

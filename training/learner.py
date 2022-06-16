@@ -24,8 +24,8 @@ if __name__ == "__main__":
     config = dict(
         gamma=1 - (T_STEP / TIME_HORIZON),
         gae_lambda=0.95,
-        learning_rate_critic=5e-5,
-        learning_rate_actor=5e-5,
+        learning_rate_critic=2e-5,
+        learning_rate_actor=2e-5,
         ent_coef=0.01,
         vf_coef=1.,
         target_steps=2_000_000,  # testing 2M normal
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     )
 
     # alg.load("C:/Users/kchin/code/Kaiyotech/abad/checkpoint_save_directory/Coyote_1650839805.8645337/Coyote_240/checkpoint.pt")
-    alg.load("checkpoint_save_directory/Coyote_1655268155.4931479/Coyote_3348/checkpoint.pt")
+    alg.load("checkpoint_save_directory/Coyote_1655308368.624237/Coyote_3408/checkpoint.pt")
     alg.agent.optimizer.param_groups[0]["lr"] = logger.config.learning_rate_actor
     alg.agent.optimizer.param_groups[1]["lr"] = logger.config.learning_rate_critic
 
