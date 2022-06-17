@@ -2,7 +2,7 @@ import numpy as np
 
 from rlgym.utils import math
 from rlgym.utils.common_values import BLUE_TEAM, BLUE_GOAL_BACK, ORANGE_GOAL_BACK, ORANGE_TEAM, BALL_MAX_SPEED, \
-    CAR_MAX_SPEED, BALL_RADIUS, GOAL_HEIGHT
+    CAR_MAX_SPEED, BALL_RADIUS, GOAL_HEIGHT, CEILING_Z
 from rlgym.utils.gamestates import GameState, PlayerData
 
 from rlgym.utils.math import cosine_similarity
@@ -293,9 +293,10 @@ class CoyoteReward(RewardFunction):
         touch_grass_w=0,
         acel_car_w=0.15,  # 0.01,
         acel_ball_w=0.3,  # 0.01,
-        boost_gain_w=0.025,  # 0.01,
-        boost_spend_w=-0.03,  # -0.01,
-        ball_touch_dribble=0.02,
+        boost_gain_w=0.08,  # 0.01,
+        boost_spend_w=-0.1,  # -0.01,
+        ball_touch_dribble_w=0.05,
+        jump_touch_w=0.8,
     ):
         self.goal_w = goal_w
         self.concede_w = concede_w
@@ -308,7 +309,8 @@ class CoyoteReward(RewardFunction):
         self.acel_ball_w = acel_ball_w
         self.boost_gain_w = boost_gain_w
         self.boost_spend_w = boost_spend_w
-        self.ball_touch_dribble_w = ball_touch_dribble
+        self.ball_touch_dribble_w = ball_touch_dribble_w
+        self.jump_touch_w = jump_touch_w
         self.been_touched = False
         self.last_touched = None
         self.rewards = None
@@ -332,7 +334,7 @@ class CoyoteReward(RewardFunction):
                 if state.ball.position[2] > 12:
                     player_rewards[i] += self.ball_touch_dribble_w
 
-                # vel bg
+                # vel bg (make this positive only now)
                 if player.team_num == BLUE_TEAM:
                     objective = np.array(ORANGE_GOAL_BACK)
                 else:
@@ -341,12 +343,20 @@ class CoyoteReward(RewardFunction):
                 pos_diff = objective - state.ball.position
                 norm_pos_diff = pos_diff / np.linalg.norm(pos_diff)
                 norm_vel = vel / BALL_MAX_SPEED
-                player_rewards[i] += self.velocity_bg_w * float(np.dot(norm_pos_diff, norm_vel))
+                if float(np.dot(norm_pos_diff, norm_vel)) > 0:
+                    player_rewards[i] += self.velocity_bg_w * float(np.dot(norm_pos_diff, norm_vel))
 
                 # acel_ball
                 curr_ball_vel = self.current_state.ball.linear_velocity
                 last_ball_vel = self.last_state.ball.linear_velocity
                 player_rewards[i] += self.acel_ball_w * (norm(curr_ball_vel - last_ball_vel) / CAR_MAX_SPEED)
+
+                # jump touch
+                min_height = 200
+                max_height = CEILING_Z - BALL_RADIUS
+                rnge = max_height - min_height
+                if not player.on_ground and state.ball.position[2] > min_height:
+                    player_rewards[i] += self.jump_touch_w * (state.ball.position[2] - min_height) / rnge
 
             # boost
             boost_diff = np.sqrt(player.boost_amount) - np.sqrt(last.boost_amount)
