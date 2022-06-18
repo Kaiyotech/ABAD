@@ -7,6 +7,7 @@ from redis import Redis
 from rlgym.envs import Match
 from rlgym.utils.terminal_conditions.common_conditions import GoalScoredCondition, TimeoutCondition
 from rlgym_tools.extra_state_setters.goalie_state import GoaliePracticeState
+from rlgym_tools.extra_state_setters.replay_setter import ReplaySetter
 
 from utils.mybots_statesets import WallDribble, GroundAirDribble, BallFrontGoalState
 from rlgym_tools.extra_state_setters.weighted_sample_setter import WeightedSampleSetter
@@ -33,7 +34,7 @@ if __name__ == "__main__":
     game_speed = 100
     team_size = 1
     host = "127.0.0.1"
-    past_version_prob = 0  # 0.2
+    past_version_prob = 0.1  # 0.2
     evaluation_prob = 0.02  # 0.01
     name = "Default"
     if len(sys.argv) > 1:
@@ -49,6 +50,7 @@ if __name__ == "__main__":
             evaluation_prob = 0
             game_speed = 1
     name = name+"-"+str(team_size)+"s"
+    replay_options = ["platdiachampgcssl_1v1.npy", "platdiachampgcssl_2v2.npy", "platdiachampgcssl_3v3.npy"]
     match = Match(
         game_speed=game_speed,
         self_play=True,
@@ -96,17 +98,21 @@ if __name__ == "__main__":
                         AugmentSetter(
                             BallFrontGoalState(),
                         ),
+                        AugmentSetter(
+                            ReplaySetter(replay_options[team_size - 1])
+                        ),
                         ),
                         (
                         0,  # groundair make this 0
                         0.10,  # wallair
-                        0.025,  # kickofflike ground
-                        0.30,  # kickofflike air
-                        0.20,  # wall make this 0.075
-                        0.20,  # goalie
-                        0.10,  # hoops
-                        0.075,  # default kickoff
+                        0,  # kickofflike ground
+                        0,  # kickofflike air
+                        0.10,  # wall make this 0.075
+                        0.05,  # goalie
+                        0.05,  # hoops
+                        0.15,  # default kickoff
                         0,  # ball front goal
+                        0.55,  # replay setter
                         ),
                     ),
         obs_builder=ExpandAdvancedPaddedObs(),
@@ -121,7 +127,7 @@ if __name__ == "__main__":
 
     model_name = "necto-model-10Y.pt"
     nectov1 = NectoV1(model_string=model_name, n_players=team_size * 2)
-    pretrained_agents = {nectov1: .15}
+    pretrained_agents = {nectov1: .05}
 
     RedisRolloutWorker(r,
                        name,
@@ -131,5 +137,5 @@ if __name__ == "__main__":
                        send_gamestates=False,
                        evaluation_prob=evaluation_prob,
                        sigma_target=2,
-                       # pretrained_agents=pretrained_agents
+                       pretrained_agents=pretrained_agents
                        ).run()

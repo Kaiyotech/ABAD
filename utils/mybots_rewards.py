@@ -287,15 +287,15 @@ class CoyoteReward(RewardFunction):
         goal_w=5,
         concede_w=-5,
         velocity_pb_w=0,
-        velocity_bg_w=0.0025,  # 0.005,
+        velocity_bg_w=0.005,  # 0.005,
         kickoff_w=0.05,
         ball_touch_w=0,  # 0.01,
         touch_grass_w=0,
         acel_car_w=0.15,  # 0.01,
         acel_ball_w=0.3,  # 0.01,
-        boost_gain_w=0.08,  # 0.01,
-        boost_spend_w=-0.1,  # -0.01,
-        ball_touch_dribble_w=0.05,
+        boost_gain_w=0.25,  # 0.01,
+        boost_spend_w=-0.25,  # -0.01,
+        ball_touch_dribble_w=0.15,
         jump_touch_w=0.8,
     ):
         self.goal_w = goal_w
@@ -359,11 +359,13 @@ class CoyoteReward(RewardFunction):
                     player_rewards[i] += self.jump_touch_w * (state.ball.position[2] - min_height) / rnge
 
             # boost
-            boost_diff = np.sqrt(player.boost_amount) - np.sqrt(last.boost_amount)
-            if boost_diff >= 0:
-                player_rewards[i] += self.boost_gain_w * boost_diff
-            else:
-                player_rewards[i] += self.boost_spend_w * boost_diff
+            # don't punish or reward boost when above  approx single jump height
+            if player.car_data.position[2] < 150:
+                boost_diff = np.sqrt(player.boost_amount) - np.sqrt(last.boost_amount)
+                if boost_diff >= 0:
+                    player_rewards[i] += self.boost_gain_w * boost_diff
+                else:
+                    player_rewards[i] += self.boost_spend_w * boost_diff
 
             # touch_grass
             player_rewards[i] += self.touch_grass_w * player.on_ground
