@@ -50,7 +50,7 @@ if __name__ == "__main__":
             evaluation_prob = 0
             game_speed = 1
     name = name+"-"+str(team_size)+"s"
-    replay_options = ["platdiachampgcssl_1v1.npy", "platdiachampgcssl_2v2.npy", "platdiachampgcssl_3v3.npy"]
+    replay_options = ["training/platdiachampgcssl_1v1.npy", "training/platdiachampgcssl_2v2.npy", "training/platdiachampgcssl_3v3.npy"]
     match = Match(
         game_speed=game_speed,
         self_play=True,
