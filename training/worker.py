@@ -34,7 +34,7 @@ if __name__ == "__main__":
     game_speed = 100
     team_size = 1
     host = "127.0.0.1"
-    past_version_prob = 0  # 0.2
+    past_version_prob = 0.1  # 0.2
     evaluation_prob = 0.02  # 0.01
     name = "Default"
     if len(sys.argv) > 1:
@@ -103,7 +103,7 @@ if __name__ == "__main__":
                         ),
                         ),
                         (
-                        0,  # groundair make this 0
+                        0.05,  # groundair make this 0
                         0.10,  # wallair
                         0,  # kickofflike ground
                         0,  # kickofflike air
@@ -112,7 +112,7 @@ if __name__ == "__main__":
                         0.05,  # hoops
                         0.15,  # default kickoff
                         0,  # ball front goal
-                        0.55,  # replay setter
+                        0.50,  # replay setter
                         ),
                     ),
         obs_builder=ExpandAdvancedPaddedObs(),

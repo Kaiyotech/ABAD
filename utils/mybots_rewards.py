@@ -293,10 +293,11 @@ class CoyoteReward(RewardFunction):
         touch_grass_w=0,
         acel_car_w=0.15,  # 0.01,
         acel_ball_w=0.3,  # 0.01,
-        boost_gain_w=0.25,  # 0.01,
-        boost_spend_w=-0.25,  # -0.01,
+        boost_gain_w=0.35,  # 0.01,
+        boost_spend_w=-0.35,  # -0.01,
         ball_touch_dribble_w=0.15,
-        jump_touch_w=0.8,
+        jump_touch_w=0.85,
+        wall_touch_w=0.5,
     ):
         self.goal_w = goal_w
         self.concede_w = concede_w
@@ -311,6 +312,7 @@ class CoyoteReward(RewardFunction):
         self.boost_spend_w = boost_spend_w
         self.ball_touch_dribble_w = ball_touch_dribble_w
         self.jump_touch_w = jump_touch_w
+        self.wall_touch_w = wall_touch_w
         self.been_touched = False
         self.last_touched = None
         self.rewards = None
@@ -331,7 +333,7 @@ class CoyoteReward(RewardFunction):
                 self.last_touched = i
                 # ball touch
                 player_rewards[i] += self.ball_touch_w
-                if state.ball.position[2] > 12:
+                if state.ball.position[2] > 140:
                     player_rewards[i] += self.ball_touch_dribble_w
 
                 # vel bg (make this positive only now)
@@ -352,11 +354,16 @@ class CoyoteReward(RewardFunction):
                 player_rewards[i] += self.acel_ball_w * (norm(curr_ball_vel - last_ball_vel) / CAR_MAX_SPEED)
 
                 # jump touch
-                min_height = 200
+                min_height = 250
                 max_height = CEILING_Z - BALL_RADIUS
                 rnge = max_height - min_height
                 if not player.on_ground and state.ball.position[2] > min_height:
                     player_rewards[i] += self.jump_touch_w * (state.ball.position[2] - min_height) / rnge
+                # wall touch
+                min_height = 350
+                if player.on_ground and state.ball.position[2] > min_height:
+                    player_rewards[i] += self.wall_touch_w * (state.ball.position[2] - min_height) / rnge
+
 
             # boost
             # don't punish or reward boost when above  approx single jump height
