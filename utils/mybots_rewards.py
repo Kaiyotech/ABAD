@@ -295,9 +295,9 @@ class CoyoteReward(RewardFunction):
         acel_ball_w=0.3,  # 0.01,
         boost_gain_w=0.35,  # 0.01,
         boost_spend_w=-0.35,  # -0.01,
-        ball_touch_dribble_w=0.15,
+        ball_touch_dribble_w=0.025,
         jump_touch_w=0.85,
-        wall_touch_w=0.5,
+        wall_touch_w=0.25,
     ):
         self.goal_w = goal_w
         self.concede_w = concede_w
@@ -333,7 +333,7 @@ class CoyoteReward(RewardFunction):
                 self.last_touched = i
                 # ball touch
                 player_rewards[i] += self.ball_touch_w
-                if state.ball.position[2] > 140:
+                if state.ball.position[2] > 140 and player.on_ground and player.car_data.position[2] < 20:
                     player_rewards[i] += self.ball_touch_dribble_w
 
                 # vel bg (make this positive only now)
