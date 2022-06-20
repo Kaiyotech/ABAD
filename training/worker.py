@@ -123,7 +123,12 @@ if __name__ == "__main__":
         reward_function=CoyoteReward(),
     )
 
-    r = Redis(host=host, username="user1", password=os.environ["redis_user1_key"])
+    r = Redis(host=host,
+              username="user1",
+              password=os.environ["redis_user1_key"],
+              socket_timeout=240,
+              retry_on_timeout=True,
+              )
 
     model_name = "necto-model-10Y.pt"
     nectov1 = NectoV1(model_string=model_name, n_players=team_size * 2)
