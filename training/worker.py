@@ -50,7 +50,9 @@ if __name__ == "__main__":
             evaluation_prob = 0
             game_speed = 1
     name = name+"-"+str(team_size)+"s"
-    replay_options = ["training/platdiachampgcssl_1v1.npy", "training/platdiachampgcssl_2v2.npy", "training/platdiachampgcssl_3v3.npy"]
+    replay_options = ["training/platdiachampgcssl_1v1.npy",
+                      "training/platdiachampgcssl_2v2.npy",
+                      "training/platdiachampgcssl_3v3.npy"]
     match = Match(
         game_speed=game_speed,
         self_play=True,
@@ -103,16 +105,16 @@ if __name__ == "__main__":
                         ),
                         ),
                         (
-                        0.05,  # groundair make this 0
-                        0.10,  # wallair
+                        0.15,  # groundair make this 0
+                        0.40,  # wallair
                         0,  # kickofflike ground
                         0,  # kickofflike air
                         0.10,  # wall make this 0.075
                         0.05,  # goalie
-                        0.05,  # hoops
-                        0.15,  # default kickoff
+                        0,  # hoops
+                        0,  # default kickoff
                         0,  # ball front goal
-                        0.50,  # replay setter
+                        0.30,  # replay setter
                         ),
                     ),
         obs_builder=ExpandAdvancedPaddedObs(),
@@ -126,8 +128,8 @@ if __name__ == "__main__":
     r = Redis(host=host,
               username="user1",
               password=os.environ["redis_user1_key"],
-              socket_timeout=240,
-              retry_on_timeout=True,
+              # socket_timeout=240,
+              # retry_on_timeout=True,
               )
 
     model_name = "necto-model-10Y.pt"

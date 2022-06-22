@@ -8,17 +8,17 @@ TIMEOUT 10
 REM start python -m training.worker 1 localhost MSI STREAMER
 :loop
 REM FOR /L %%G IN (1,1,5) DO (start python -m training.worker & TIMEOUT 60)
-start python -m training.worker 1 localhost MSI
+start python -m training.worker 3 localhost MSI
 TIMEOUT 30
-start python -m training.worker 1 localhost MSI
+start python -m training.worker 3 localhost MSI
 TIMEOUT 30
-start python -m training.worker 1 localhost MSI
+start python -m training.worker 3 localhost MSI
 TIMEOUT 30
-start python -m training.worker 1 localhost MSI
+start python -m training.worker 3 localhost MSI
 TIMEOUT 30
-start python -m training.worker 1 localhost MSI
+start python -m training.worker 3 localhost MSI
 TIMEOUT 30
-start python -m training.worker 1 localhost MSI
+start python -m training.worker 3 localhost MSI
 TIMEOUT 180
 nircmd win min process "RocketLeague.exe"
 REM TIMEOUT 10800
